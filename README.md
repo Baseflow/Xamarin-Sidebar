@@ -1,4 +1,4 @@
-Monotouch-SlideoutNavigation
+Xamarin-SlideoutNavigation
 ============================
 
-A slideout navigation control for Monotouch.
+A slideout navigation control for Xamarin.
