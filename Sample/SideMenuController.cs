@@ -14,8 +14,9 @@ namespace Sample
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
-			
-			View.BackgroundColor = UIColor.Gray;
+			View.BackgroundColor = UIColor.FromRGB(.1f, .1f, .1f);
+
+
 		}
 	}
 }

@@ -5,9 +5,9 @@ using MonoTouch.UIKit;
 
 namespace Sample
 {
-	public partial class ContentController : UIViewController
+	public partial class IntroController : UIViewController
 	{
-		public ContentController() : base(null, null)
+		public IntroController() : base(null, null)
 		{
 		}
 
@@ -26,7 +26,10 @@ namespace Sample
 			body.Font = UIFont.SystemFontOfSize(12.0f);
 			body.TextAlignment = UITextAlignment.Center;
 			body.Lines = 0;
-			body.Text = @"This is the content view controller.";
+			body.Text = @"This is the intro view controller. 
+Click the button below to open the menu to switch controllers.
+
+You can also drag the menu open from the right side of the screen";
 
 			var menuButton = new UIButton(UIButtonType.System);
 			menuButton.Frame = new RectangleF(50, 250, 220, 30);
