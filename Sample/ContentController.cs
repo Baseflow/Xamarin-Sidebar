@@ -5,7 +5,7 @@ using MonoTouch.UIKit;
 
 namespace Sample
 {
-	public partial class ContentController : UIViewController
+	public partial class ContentController : BaseController
 	{
 		public ContentController() : base(null, null)
 		{
@@ -32,7 +32,7 @@ namespace Sample
 			menuButton.Frame = new RectangleF(50, 250, 220, 30);
 			menuButton.SetTitle("Toggle Side Menu", UIControlState.Normal);
 			menuButton.TouchUpInside += (sender, e) => {
-				(UIApplication.SharedApplication.Delegate as AppDelegate).RootViewController.SidebarController.ToggleMenu();
+				SidebarController.ToggleMenu();
 			};
 
 			View.Add(title);

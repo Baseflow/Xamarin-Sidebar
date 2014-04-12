@@ -5,7 +5,7 @@ using MonoTouch.UIKit;
 
 namespace Sample
 {
-	public partial class IntroController : UIViewController
+	public partial class IntroController : BaseController
 	{
 		public IntroController() : base(null, null)
 		{
@@ -35,7 +35,7 @@ You can also drag the menu open from the right side of the screen";
 			menuButton.Frame = new RectangleF(50, 250, 220, 30);
 			menuButton.SetTitle("Toggle Side Menu", UIControlState.Normal);
 			menuButton.TouchUpInside += (sender, e) => {
-				(UIApplication.SharedApplication.Delegate as AppDelegate).RootViewController.SidebarController.ToggleMenu();
+				SidebarController.ToggleMenu();
 			};
 
 			View.Add(title);

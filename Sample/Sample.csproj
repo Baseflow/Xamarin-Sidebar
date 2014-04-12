@@ -115,6 +115,10 @@
     <Compile Include="IntroController.designer.cs">
       <DependentUpon>IntroController.cs</DependentUpon>
     </Compile>
+    <Compile Include="BaseController.cs" />
+    <Compile Include="BaseController.designer.cs">
+      <DependentUpon>BaseController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

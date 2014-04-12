@@ -39,6 +39,9 @@ namespace XamarinSidebar
 
 		#region Public Properties
 
+		/// <summary>
+		/// The view shown the content area.
+		/// </summary>
 		public UIViewController RootViewController { get; private set; }
 
 		/// <summary>
@@ -203,6 +206,26 @@ namespace XamarinSidebar
 			HideShadow();
 		}
 
+		public void ChangeContentView(UIViewController newContentView) {
+			if (_rootView != null)
+				_rootView.RemoveFromSuperview();
+			RootViewController = newContentView;
+			HideMenu(true);
+			SetVisibleView();
+			// setup a tap gesture to close the menu on root view tap
+			_tapGesture = new UITapGestureRecognizer ();
+			_tapGesture.AddTarget (() => HideMenu());
+			_tapGesture.NumberOfTapsRequired = 1;
+			
+			_panGesture = new UIPanGestureRecognizer {
+				Delegate = new SlideoutPanDelegate(this),
+				MaximumNumberOfTouches = 1,
+				MinimumNumberOfTouches = 1
+			};
+			_panGesture.AddTarget (() => Pan (_rootView));
+			_rootView.AddGestureRecognizer (_panGesture);
+		}
+
 		#endregion
 
 		#region Private Methods
@@ -230,21 +253,7 @@ namespace XamarinSidebar
 			_navigation.View.Frame = navigationFrame;
 			View.AddSubview(_navigation.View);
 
-			// set the root view as the top view 
-			SetVisibleView();
-
-			// setup a tap gesture to close the menu on root view tap
-			_tapGesture = new UITapGestureRecognizer ();
-			_tapGesture.AddTarget (() => HideMenu());
-			_tapGesture.NumberOfTapsRequired = 1;
-
-			_panGesture = new UIPanGestureRecognizer {
-				Delegate = new SlideoutPanDelegate(this),
-				MaximumNumberOfTouches = 1,
-				MinimumNumberOfTouches = 1
-			};
-			_panGesture.AddTarget (() => Pan (_rootView));
-			_rootView.AddGestureRecognizer (_panGesture);
+			ChangeContentView(currentViewController);
 		}
 
 		/// <summary>

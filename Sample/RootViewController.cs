@@ -12,13 +12,15 @@ namespace Sample
 
 		public RootViewController() : base(null, null)
 		{
-			// create a slideout navigation controller with the top navigation controller and the menu view controller
-			SidebarController = new XamarinSidebar.SidebarController(new IntroController(), new SideMenuController());
+
 		}
 
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
+
+			// create a slideout navigation controller with the top navigation controller and the menu view controller
+			SidebarController = new XamarinSidebar.SidebarController(new IntroController(), new SideMenuController());
 
 			// set the view to the sidebar controller
 			// TODO make this unecessary somehow
