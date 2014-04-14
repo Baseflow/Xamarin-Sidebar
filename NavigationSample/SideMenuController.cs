@@ -3,7 +3,7 @@ using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 
-namespace Sample
+namespace NavigationSample
 {
 	public partial class SideMenuController : BaseController
 	{
@@ -35,14 +35,14 @@ namespace Sample
 			introButton.Frame = new RectangleF(0, 180, 260, 20);
 			introButton.SetTitle("Intro", UIControlState.Normal);
 			introButton.TouchUpInside += (sender, e) => {
-				SidebarController.ChangeContentView(new IntroController());
+				//SidebarController.ChangeContentView(new IntroController());
 			};
 
 			var contentButton = new UIButton(UIButtonType.System);
 			contentButton.Frame = new RectangleF(0, 220, 260, 20);
 			contentButton.SetTitle("Content", UIControlState.Normal);
 			contentButton.TouchUpInside += (sender, e) => {
-				SidebarController.ChangeContentView(new ContentController());
+				//SidebarController.ChangeContentView(new ContentController());
 			};
 
 			View.Add(title);
