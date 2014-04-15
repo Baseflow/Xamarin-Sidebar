@@ -10,6 +10,9 @@ namespace NavigationSample
 		// the sidebar controller for the app
 		public XamarinSidebar.SidebarController SidebarController { get; private set; }
 
+		// the navigation controller
+		public NavController NavController { get; private set; }
+
 		public RootViewController() : base(null, null)
 		{
 
@@ -20,9 +23,9 @@ namespace NavigationSample
 			base.ViewDidLoad();
 
 			// create a slideout navigation controller with the top navigation controller and the menu view controller
-			var navigationController = new NavigationController();
-			navigationController.PushViewController(new IntroController(), false);
-			SidebarController = new XamarinSidebar.SidebarController(navigationController, new SideMenuController());
+			NavController = new NavController();
+			NavController.PushViewController(new IntroController(), false);
+			SidebarController = new XamarinSidebar.SidebarController(NavController, new SideMenuController());
 
 			// set the view to the sidebar controller
 			// TODO make this unecessary somehow

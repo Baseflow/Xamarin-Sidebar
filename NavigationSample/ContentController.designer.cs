@@ -8,8 +8,8 @@ using MonoTouch.Foundation;
 
 namespace NavigationSample
 {
-	[Register("NavigationController")]
-	partial class NavigationController
+	[Register("ContentController")]
+	partial class ContentController
 	{
 		void ReleaseDesignerOutlets()
 		{

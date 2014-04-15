@@ -5,9 +5,9 @@ using MonoTouch.UIKit;
 
 namespace NavigationSample
 {
-	public partial class NavigationController : UINavigationController
+	public partial class NavController : UINavigationController
 	{
-		public NavigationController() : base((string)null, null)
+		public NavController() : base((string)null, null)
 		{
 		}
 

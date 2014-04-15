@@ -7,9 +7,6 @@ namespace NavigationSample
 {
 	public partial class SideMenuController : BaseController
 	{
-		// the sidebar controller for the app
-		XamarinSidebar.SidebarController _sidebarController;
-
 		public SideMenuController() : base(null, null)
 		{
 		}
@@ -35,14 +32,16 @@ namespace NavigationSample
 			introButton.Frame = new RectangleF(0, 180, 260, 20);
 			introButton.SetTitle("Intro", UIControlState.Normal);
 			introButton.TouchUpInside += (sender, e) => {
-				//SidebarController.ChangeContentView(new IntroController());
+				NavController.PopToRootViewController(false);
+				SidebarController.HideMenu();
 			};
 
 			var contentButton = new UIButton(UIButtonType.System);
 			contentButton.Frame = new RectangleF(0, 220, 260, 20);
 			contentButton.SetTitle("Content", UIControlState.Normal);
 			contentButton.TouchUpInside += (sender, e) => {
-				//SidebarController.ChangeContentView(new ContentController());
+				NavController.PushViewController(new ContentController(), false);
+				SidebarController.HideMenu();
 			};
 
 			View.Add(title);
