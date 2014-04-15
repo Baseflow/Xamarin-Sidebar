@@ -9,7 +9,6 @@ namespace XamarinSidebar
 	public class SidebarController : UIViewController
 	{
 		public const int _menuWidth = 260;
-
 		private event UITouchEventArgs _shouldReceiveTouch;
 
 		#region Private Fields
@@ -27,7 +26,7 @@ namespace XamarinSidebar
 		/// The view controller for the navigation menu.
 		/// This is what is shown when the the menu is displayed.
 		/// </summary>
-		private UIViewController _navigation;
+		private UIViewController _menuController;
 
 		// gesture recognizers
 		private UITapGestureRecognizer _tapGesture;
@@ -40,45 +39,62 @@ namespace XamarinSidebar
 		#region Public Properties
 
 		/// <summary>
-		/// The view shown the content area.
+		/// The view shown in the content area.
 		/// </summary>
-		public UIViewController RootViewController { get; private set; }
+		public UIViewController ContentAreaController { get; private set; }
 
 		/// <summary>
-		/// The view controller for the navigation menu.
+		/// The view controller for the side menu.
 		/// This is what will be shown when the menu is displayed.
 		/// </summary>
-		public UIViewController NavigationViewController
+		public UIViewController MenuAreaController
 		{
-			get { return _navigation; }
-			set { _navigation = value; }
+			get { return _menuController; }
+			set { _menuController = value; }
 		}
 
 		/// <summary>
-		/// Determines if the status bar should be made static
+		/// Determines if the status bar should be made static.
 		/// </summary>
-		/// <value><c>true</c> if disable status bar moving; otherwise, <c>false</c>.</value>
-		public bool DisableStatusBarMoving { get; set; }
+		/// <value>True to make the status bar static, false to make it move with the content area.</value>
+		public bool StatusBarMoves { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether there should be shadowing effects on the root view
+		/// Gets or sets a value indicating whether there should be shadowing effects on the content view.
 		/// </summary>
-		public bool LayerShadowing { get; set; }
+		public bool HasShadowing { get; set; }
+
+		/// <summary>
+		/// Gets the current state of the menu.
+		/// Setting this property will open/close the menu respectively.
+		/// </summary>
+		public bool IsOpen
+		{
+			get { return _isOpen; }
+			set
+			{
+				_isOpen = value;
+				if (value)
+					CloseMenu();
+				else
+					OpenMenu();
+			}
+		}
 
 		#endregion
 
 		#region Private Properties
 
 		/// <summary>
-		/// The UIView of the root view controller.
+		/// The UIView of the content view controller.
 		/// </summary>
-		private UIView _rootView
+		private UIView _contentAreaView
 		{
 			get
 			{
-				if (RootViewController == null)
+				if (ContentAreaController == null)
 					return null;
-				return RootViewController.View;
+				return ContentAreaController.View;
 			}
 		}
 
@@ -96,77 +112,47 @@ namespace XamarinSidebar
 		/// <summary>
 		/// Contructor.
 		/// </summary>
-		/// <param name="rootViewController">
-		/// The current root view controller of the application.
-		/// This is what will be panned to show the menu.
+		/// <param name="contentAreaController">
+		/// The view controller for the content area.
 		/// </param>
-		/// <param name="navigationViewController">The view controller for the navigation menu.</param>
-		public SidebarController(UIViewController rootViewController, UIViewController navigationViewController = null)
+		/// <param name="navigationAreaController">
+		/// The view controller for the side menu.
+		/// </param>
+		public SidebarController(UIViewController contentAreaController, UIViewController navigationAreaController = null)
 		{
-			if (navigationViewController == null)
-				navigationViewController = new UIViewController();
-			Initialize(rootViewController, navigationViewController);
+			if (navigationAreaController == null)
+				navigationAreaController = new UIViewController();
+			Initialize(contentAreaController, navigationAreaController);
 		}
-
-		/// <summary>
-		/// Do stuff when the view is show.
-		/// </summary>
-		public override void ViewWillAppear(bool animated)
-		{
-			RectangleF navigationFrame = _navigation.View.Frame;
-			navigationFrame.X = navigationFrame.Width - _menuWidth;
-			navigationFrame.Width = _menuWidth;
-			navigationFrame.Location = PointF.Empty;
-			_navigation.View.Frame = navigationFrame;
-
-			base.ViewWillAppear(animated);
-		}
-
+			
 		#endregion
 
 		#region Public Methods
 
 		/// <summary>
-		/// Gets the current state of the menu.
-		/// Setting this property will open/close the menu respectively.
-		/// </summary>
-		public bool IsOpen
-		{
-			get { return _isOpen; }
-			set
-			{
-				_isOpen = value;
-				if (value)
-					HideMenu();
-				else
-					ShowMenu();
-			}
-		}
-
-		/// <summary>
-		/// Toggles the menu.
+		/// Toggles the menu open or closed.
 		/// </summary>
 		public void ToggleMenu()
 		{
-			if (!IsOpen && RootViewController != null && RootViewController.IsViewLoaded)
-				ResignFirstResponders(RootViewController.View);
-
+			if (!IsOpen && ContentAreaController != null && ContentAreaController.IsViewLoaded)
+				ResignFirstResponders(ContentAreaController.View);
 			if (IsOpen)
-				HideMenu();
+				CloseMenu();
 			else
-				ShowMenu();
+				OpenMenu();
 		}
 
 		/// <summary>
 		/// Shows the slideout navigation menu.
 		/// </summary>
-		public void ShowMenu()
+		public void OpenMenu()
 		{
 			if (IsOpen)
 				return;
 			ShowShadow(5);
-			var view = _rootView;
-			UIView.Animate(_slideSpeed, 
+			var view = _contentAreaView;
+			UIView.Animate(
+				_slideSpeed, 
 				0, 
 				UIViewAnimationOptions.CurveEaseInOut,
 				() => { view.Frame = new RectangleF (-_menuWidth, 0, view.Frame.Width, view.Frame.Height); },
@@ -176,17 +162,16 @@ namespace XamarinSidebar
 					view.AddGestureRecognizer(_tapGesture);
 					_isOpen = true;
 				});
-
 		}
 
 		/// <summary>
 		/// Hides the slideout navigation menu.
 		/// </summary>
-		public void HideMenu(bool animate = true)
+		public void CloseMenu(bool animate = true)
 		{
 			if (!IsOpen)
 				return;
-			var view = _rootView;
+			var view = _contentAreaView;
 			// define the animation
 			NSAction animation = () => { view.Frame = new RectangleF (0, 0, view.Frame.Width, view.Frame.Height); };
 			// define the action for finished animation
@@ -206,24 +191,29 @@ namespace XamarinSidebar
 			HideShadow();
 		}
 
+		/// <summary>
+		/// Replaces the content area view controller with the specified view controller.
+		/// </summary>
+		/// <param name="newContentView">
+		/// New content view.
+		/// </param>
 		public void ChangeContentView(UIViewController newContentView) {
-			if (_rootView != null)
-				_rootView.RemoveFromSuperview();
-			RootViewController = newContentView;
-			HideMenu(true);
+			if (_contentAreaView != null)
+				_contentAreaView.RemoveFromSuperview();
+			ContentAreaController = newContentView;
+			CloseMenu(true);
 			SetVisibleView();
 			// setup a tap gesture to close the menu on root view tap
 			_tapGesture = new UITapGestureRecognizer ();
-			_tapGesture.AddTarget (() => HideMenu());
+			_tapGesture.AddTarget (() => CloseMenu());
 			_tapGesture.NumberOfTapsRequired = 1;
-			
 			_panGesture = new UIPanGestureRecognizer {
 				Delegate = new SlideoutPanDelegate(this),
 				MaximumNumberOfTouches = 1,
 				MinimumNumberOfTouches = 1
 			};
-			_panGesture.AddTarget (() => Pan (_rootView));
-			_rootView.AddGestureRecognizer (_panGesture);
+			_panGesture.AddTarget (() => Pan (_contentAreaView));
+			_contentAreaView.AddGestureRecognizer(_panGesture);
 		}
 
 		#endregion
@@ -232,14 +222,14 @@ namespace XamarinSidebar
 
 		private void Initialize(UIViewController currentViewController, UIViewController navigationViewController)
 		{
-			RootViewController = currentViewController;
-			_navigation = navigationViewController;
+			ContentAreaController = currentViewController;
+			_menuController = navigationViewController;
 
 			// enable shadow by default
-			LayerShadowing = true;
+			HasShadowing = true;
 
 			// make the status bar static
-			DisableStatusBarMoving = true;
+			StatusBarMoves = true;
 			_statusImage = new UIImageView();
 
 			// set iOS 7 flag
@@ -247,11 +237,11 @@ namespace XamarinSidebar
 			_isIos7 = version.Major >= 7;
 
 			// add the navigation view on the right
-			var navigationFrame = _navigation.View.Frame;
+			var navigationFrame = _menuController.View.Frame;
 			navigationFrame.X = navigationFrame.Width - _menuWidth;
 			navigationFrame.Width = _menuWidth;
-			_navigation.View.Frame = navigationFrame;
-			View.AddSubview(_navigation.View);
+			_menuController.View.Frame = navigationFrame;
+			View.AddSubview(_menuController.View);
 
 			ChangeContentView(currentViewController);
 		}
@@ -261,7 +251,7 @@ namespace XamarinSidebar
 		/// </summary>
 		private void SetVisibleView()
 		{
-			if(!DisableStatusBarMoving)
+			if(!StatusBarMoves)
 				UIApplication.SharedApplication.SetStatusBarHidden(false, UIStatusBarAnimation.Fade);
 			bool isOpen = false;
 
@@ -272,8 +262,8 @@ namespace XamarinSidebar
 			SetViewSize();
 			SetLocation(frame);
 
-			View.AddSubview(_rootView);
-			AddChildViewController(RootViewController);
+			View.AddSubview(_contentAreaView);
+			AddChildViewController(ContentAreaController);
 		}
 
 		/// <summary>
@@ -282,9 +272,9 @@ namespace XamarinSidebar
 		private void SetViewSize()
 		{
 			RectangleF frame = View.Bounds;
-			if (_rootView.Bounds == frame)
+			if (_contentAreaView.Bounds == frame)
 				return;
-			_rootView.Bounds = frame;
+			_contentAreaView.Bounds = frame;
 		}
 
 		/// <summary>
@@ -294,25 +284,25 @@ namespace XamarinSidebar
 		private void SetLocation(RectangleF frame)
 		{
 			frame.Y = 0;
-			_rootView.Layer.AnchorPoint = new PointF(.5f, .5f);
+			_contentAreaView.Layer.AnchorPoint = new PointF(.5f, .5f);
 
 			// exit if we're already at the desired location
-			if (_rootView.Frame.Location == frame.Location)
+			if (_contentAreaView.Frame.Location == frame.Location)
 				return;
 
-			frame.Size = _rootView.Frame.Size;
+			frame.Size = _contentAreaView.Frame.Size;
 
 			// set the root views cetner
 			var center = new PointF(frame.Left + frame.Width / 2,
 				frame.Top + frame.Height / 2);
-			_rootView.Center = center;
+			_contentAreaView.Center = center;
 
 			// if x is greater than 0 then position the status view
 			if (Math.Abs(frame.X - 0) > float.Epsilon)
 			{
 				GetStatusImage();
 				var statusFrame = _statusImage.Frame;
-				statusFrame.X = _rootView.Frame.X;
+				statusFrame.X = _contentAreaView.Frame.X;
 				_statusImage.Frame = statusFrame;
 			}
 		}
@@ -338,7 +328,7 @@ namespace XamarinSidebar
 				float velocity = _panGesture.VelocityInView(view).X;
 				if (IsOpen) {
 					if (view.Frame.X > -(view.Frame.Width / 2)) {
-						HideMenu();
+						CloseMenu();
 					} else {
 						UIView.Animate(_slideSpeed, 0, UIViewAnimationOptions.CurveEaseInOut,
 							() => {
@@ -348,7 +338,7 @@ namespace XamarinSidebar
 					}
 				} else {
 					if (velocity < -800.0f || (view.Frame.X < -(view.Frame.Width / 2))) {
-						ShowMenu();
+						OpenMenu();
 					} else {
 						UIView.Animate(_slideSpeed, 0, UIViewAnimationOptions.CurveEaseInOut,
 							() => {
@@ -365,13 +355,13 @@ namespace XamarinSidebar
 		/// </summary>
 		private void ShowShadowWhileDragging()
 		{
-			if (!LayerShadowing)
+			if (!HasShadowing)
 				return;
-			_rootView.Layer.ShadowOffset = new SizeF(5, 0);
-			_rootView.Layer.ShadowPath = UIBezierPath.FromRect (_rootView.Bounds).CGPath;
-			_rootView.Layer.ShadowRadius = 4.0f;
-			_rootView.Layer.ShadowOpacity = 0.5f;
-			_rootView.Layer.ShadowColor = UIColor.Black.CGColor;
+			_contentAreaView.Layer.ShadowOffset = new SizeF(5, 0);
+			_contentAreaView.Layer.ShadowPath = UIBezierPath.FromRect (_contentAreaView.Bounds).CGPath;
+			_contentAreaView.Layer.ShadowRadius = 4.0f;
+			_contentAreaView.Layer.ShadowOpacity = 0.5f;
+			_contentAreaView.Layer.ShadowColor = UIColor.Black.CGColor;
 		}
 
 		/// <summary>
@@ -380,13 +370,13 @@ namespace XamarinSidebar
 		private void ShowShadow(float position)
 		{
 			//Dont need to call this twice if its already shown
-			if (!LayerShadowing || _shadowShown)
+			if (!HasShadowing || _shadowShown)
 				return;
-			_rootView.Layer.ShadowOffset = new SizeF(position, 0);
-			_rootView.Layer.ShadowPath = UIBezierPath.FromRect (_rootView.Bounds).CGPath;
-			_rootView.Layer.ShadowRadius = 4.0f;
-			_rootView.Layer.ShadowOpacity = 0.5f;
-			_rootView.Layer.ShadowColor = UIColor.Black.CGColor;
+			_contentAreaView.Layer.ShadowOffset = new SizeF(position, 0);
+			_contentAreaView.Layer.ShadowPath = UIBezierPath.FromRect (_contentAreaView.Bounds).CGPath;
+			_contentAreaView.Layer.ShadowRadius = 4.0f;
+			_contentAreaView.Layer.ShadowOpacity = 0.5f;
+			_contentAreaView.Layer.ShadowColor = UIColor.Black.CGColor;
 			_shadowShown = true;
 		}
 
@@ -396,12 +386,12 @@ namespace XamarinSidebar
 		private void HideShadow()
 		{
 			//Dont need to call this twice if its already hidden
-			if (!LayerShadowing || !_shadowShown)
+			if (!HasShadowing || !_shadowShown)
 				return;
-			_rootView.Layer.ShadowOffset = new SizeF (0, 0);
-			_rootView.Layer.ShadowRadius = 0.0f;
-			_rootView.Layer.ShadowOpacity = 0.0f;
-			_rootView.Layer.ShadowColor = UIColor.Clear.CGColor;
+			_contentAreaView.Layer.ShadowOffset = new SizeF (0, 0);
+			_contentAreaView.Layer.ShadowRadius = 0.0f;
+			_contentAreaView.Layer.ShadowOpacity = 0.0f;
+			_contentAreaView.Layer.ShadowColor = UIColor.Clear.CGColor;
 			_shadowShown = false;
 		}
 
@@ -410,7 +400,7 @@ namespace XamarinSidebar
 		/// </summary>
 		private void GetStatusImage()
 		{
-			if (DisableStatusBarMoving || !_isIos7 || _statusImage.Superview != null)
+			if (StatusBarMoves || !_isIos7 || _statusImage.Superview != null)
 				return;
 			this.View.AddSubview(_statusImage);
 			_statusImage.Image = CaptureStatusBarImage();
@@ -462,9 +452,6 @@ namespace XamarinSidebar
 			return true;
 		}
 
-		/// <summary>
-		/// TODO: Not sure what this does yet.
-		/// </summary>
 		private void ResignFirstResponders(UIView view)
 		{
 			if (view.Subviews == null)
@@ -478,8 +465,6 @@ namespace XamarinSidebar
 		}
 
 		#endregion
-
-		#region Other
 
 		private class SlideoutPanDelegate : UIGestureRecognizerDelegate
 		{
@@ -502,11 +487,19 @@ namespace XamarinSidebar
 			RectangleF navigationFrame = View.Bounds;
 			navigationFrame.X = navigationFrame.Width - _menuWidth;
 			navigationFrame.Width = _menuWidth;
-			if (_navigation.View.Frame != navigationFrame)
-				_navigation.View.Frame = navigationFrame;
+			if (_menuController.View.Frame != navigationFrame)
+				_menuController.View.Frame = navigationFrame;
 		}
 
-		#endregion
+		public override void ViewWillAppear(bool animated)
+		{
+			RectangleF navigationFrame = _menuController.View.Frame;
+			navigationFrame.X = navigationFrame.Width - _menuWidth;
+			navigationFrame.Width = _menuWidth;
+			navigationFrame.Location = PointF.Empty;
+			_menuController.View.Frame = navigationFrame;
+			base.ViewWillAppear(animated);
+		}
 	}
 }
 

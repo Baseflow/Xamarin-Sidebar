@@ -33,7 +33,7 @@ namespace NavigationSample
 			introButton.SetTitle("Intro", UIControlState.Normal);
 			introButton.TouchUpInside += (sender, e) => {
 				NavController.PopToRootViewController(false);
-				SidebarController.HideMenu();
+				SidebarController.CloseMenu();
 			};
 
 			var contentButton = new UIButton(UIButtonType.System);
@@ -41,7 +41,7 @@ namespace NavigationSample
 			contentButton.SetTitle("Content", UIControlState.Normal);
 			contentButton.TouchUpInside += (sender, e) => {
 				NavController.PushViewController(new ContentController(), false);
-				SidebarController.HideMenu();
+				SidebarController.CloseMenu();
 			};
 
 			View.Add(title);
