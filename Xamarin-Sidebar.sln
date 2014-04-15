@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin-Sidebar", "Xamarin-Sidebar\Xamarin-Sidebar.csproj", "{4046DF23-7FA6-4662-938D-FA3FF45DB144}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{7779A8B9-7734-4208-8F38-CB5114383BAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSample", "SimpleSample\SimpleSample.csproj", "{7779A8B9-7734-4208-8F38-CB5114383BAB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NavigationSample", "NavigationSample\NavigationSample.csproj", "{A495E6C0-334A-4A3F-BBCB-F20FD893D216}"
 EndProject
@@ -69,6 +69,6 @@ Global
 		{A495E6C0-334A-4A3F-BBCB-F20FD893D216}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = NavigationSample\NavigationSample.csproj
+		StartupItem = SimpleSample\SimpleSample.csproj
 	EndGlobalSection
 EndGlobal
