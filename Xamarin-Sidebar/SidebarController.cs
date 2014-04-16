@@ -50,7 +50,7 @@ namespace XamarinSidebar
 		public UIViewController MenuAreaController
 		{
 			get { return _menuController; }
-			set { _menuController = value; }
+			private set { _menuController = value; }
 		}
 
 		/// <summary>
