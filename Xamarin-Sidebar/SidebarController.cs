@@ -118,11 +118,13 @@ namespace XamarinSidebar
 		/// <param name="navigationAreaController">
 		/// The view controller for the side menu.
 		/// </param>
-		public SidebarController(UIViewController contentAreaController, UIViewController navigationAreaController = null)
+		public SidebarController(UIViewController rootViewController, UIViewController contentAreaController, UIViewController navigationAreaController)
 		{
-			if (navigationAreaController == null)
-				navigationAreaController = new UIViewController();
 			Initialize(contentAreaController, navigationAreaController);
+			// handle wiring things up so events propogate properly
+			rootViewController.AddChildViewController(this);
+			rootViewController.View.AddSubview(this.View);
+			this.DidMoveToParentViewController(rootViewController);
 		}
 			
 		#endregion
