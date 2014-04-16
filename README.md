@@ -43,7 +43,7 @@ public override bool FinishedLaunching(UIApplication app, NSDictionary options)
 {
 	window = new UIWindow(UIScreen.MainScreen.Bounds);
 	
-	// set out root view controller with the sidebar menu as the apps root view controller
+	// set our root view controller with the sidebar menu as the apps root view controller
 	window.RootViewController = new RootViewController();
 	
 	window.MakeKeyAndVisible();
@@ -65,17 +65,6 @@ In the side menu controller you can add buttons to change the content view.
 ```csharp
 otherContentButton.TouchUpInside += (sender, e) => {
 	SidebarController.ChangeContentView(new OtherContentController());
-};
-```
-
-If you want to push controllers onto the stack when a menu option is selected you can
-set your content controller to be a UINavigationController. You would then set the button
-click action in the side menu controller to push to that navigation controller.
-
-```csharp 
-otherContentButton.TouchUpInside += (sender, e) => {
-	NavController.PushViewController(new OtherContentController(), false);
-	SidebarController.CloseMenu();
 };
 ```
 
