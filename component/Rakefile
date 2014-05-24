@@ -1,0 +1,36 @@
+require "rake/clean"
+
+CLEAN.include "*.xam"
+CLEAN.include "xamarin-component"
+
+COMPONENT = “Xamarin-Sidebar-0.5.xam"
+
+file "xamarin-component/xamarin-component.exe" do
+	puts "* Downloading xamarin-component..."
+	mkdir "xamarin-component"
+	sh "curl -L https://components.xamarin.com/submit/xpkg > xamarin-component.zip"
+	sh "unzip -o -q xamarin-component.zip -d xamarin-component"
+	sh "rm xamarin-component.zip"
+end
+
+task :default => "xamarin-component/xamarin-component.exe" do
+	line = <<-END
+	mono xamarin-component/xamarin-component.exe create-manually #{COMPONENT} \
+		--name=“Xamarin Sidebar” \
+		--summary=“An easy to use and versatile slideout menu.” \
+		--publisher=“Jack Dehlin“ \
+		--website="" \
+		--details="Details.md" \
+		--license=“../LICENSE.md" \
+		--getting-started="GettingStarted.md" \
+		--icon="icon_128x128.png" \
+		--icon="icon_512x512.png" \
+		--library="ios”:”../Xamarin-Sidebar/bin/Release/Xamarin-Sidebar.dll" \
+		--sample=“A simple iOS Sample.”:”../SimpleSample/bin/Release/SimpleSample.sln" \
+		--sample=“An iOS sample using a navigation controller”:”../NavigationSample/bin/Release/NavigationSample.sln"
+		END
+	puts "* Creating #{COMPONENT}..."
+	puts line.strip.gsub "\t\t", "\\\n    "
+	sh line, :verbose => false
+	puts "* Created #{COMPONENT}"
+end
