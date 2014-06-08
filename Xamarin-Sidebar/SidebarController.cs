@@ -321,16 +321,20 @@ namespace XamarinSidebar
 				_ignorePan = false;
 			} else if (!_ignorePan && (_panGesture.State == UIGestureRecognizerState.Changed)) {
 				float t = _panGesture.TranslationInView(view).X;
-				if (t < -MenuWidth)
-					t = -MenuWidth;
-				else if (t > MenuWidth)
-					t = MenuWidth; 
-				if ((_panOriginX + t) <= 0)
-					view.Frame = new RectangleF(_panOriginX + t, view.Frame.Y, view.Frame.Width, view.Frame.Height);
-				ShowShadowWhileDragging();
+				Console.WriteLine (t + " " + IsOpen);
+				if (((t < 0) && (IsOpen == false)) || ((t > 0) && (IsOpen == true))) {
+					if (t < -MenuWidth)
+						t = -MenuWidth;
+					else if (t > MenuWidth)
+						t = MenuWidth; 
+					if ((_panOriginX + t) <= 0)
+						view.Frame = new RectangleF (_panOriginX + t, view.Frame.Y, view.Frame.Width, view.Frame.Height);
+					ShowShadowWhileDragging ();
+				}
 			} else if (!_ignorePan && (_panGesture.State == UIGestureRecognizerState.Ended || _panGesture.State == UIGestureRecognizerState.Cancelled)) {
+				float t = _panGesture.TranslationInView(view).X;
 				float velocity = _panGesture.VelocityInView(view).X;
-				if (IsOpen) {
+				if ((IsOpen) &&  (t > 0)){
 					if (view.Frame.X > -(view.Frame.Width / 2)) {
 						CloseMenu();
 					} else {
