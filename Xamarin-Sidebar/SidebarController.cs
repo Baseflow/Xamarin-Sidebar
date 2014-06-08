@@ -12,6 +12,13 @@ namespace XamarinSidebar
 		public const int DefaultMenuWidth = 260;
 		private event UITouchEventArgs _shouldReceiveTouch;
 
+		public LocationEnum Location{ get; set; }
+
+		public enum LocationEnum{
+			Left,
+			Right
+		}
+
 		#region Private Fields
 
 		private float _slideSpeed = 0.2f;
@@ -119,8 +126,9 @@ namespace XamarinSidebar
 		/// <param name="navigationAreaController">
 		/// The view controller for the side menu.
 		/// </param>
-		public SidebarController(UIViewController rootViewController, UIViewController contentAreaController, UIViewController navigationAreaController)
+		public SidebarController(UIViewController rootViewController, UIViewController contentAreaController, UIViewController navigationAreaController, LocationEnum location)
 		{
+			this.Location = location;
 			this.MenuWidth = DefaultMenuWidth;
 			Initialize(contentAreaController, navigationAreaController);
 			// handle wiring things up so events propogate properly
@@ -159,7 +167,13 @@ namespace XamarinSidebar
 				_slideSpeed, 
 				0, 
 				UIViewAnimationOptions.CurveEaseInOut,
-				() => { view.Frame = new RectangleF (-MenuWidth, 0, view.Frame.Width, view.Frame.Height); },
+				() => { 
+					if(Location == LocationEnum.Right){
+					view.Frame = new RectangleF (-MenuWidth, 0, view.Frame.Width, view.Frame.Height);
+					}else if(Location == LocationEnum.Left){
+					view.Frame = new RectangleF (MenuWidth, 0, view.Frame.Width, view.Frame.Height);
+					}
+				},
 				() => {
 					if (view.Subviews.Length > 0)
 						view.Subviews[0].UserInteractionEnabled = false;
@@ -241,10 +255,16 @@ namespace XamarinSidebar
 			_isIos7 = version.Major >= 7;
 
 			// add the navigation view on the right
-			var navigationFrame = _menuController.View.Frame;
-			navigationFrame.X = navigationFrame.Width - MenuWidth;
-			navigationFrame.Width = MenuWidth;
-			_menuController.View.Frame = navigationFrame;
+
+			RectangleF navigationFrame;
+
+		
+				navigationFrame = _menuController.View.Frame;
+				navigationFrame.X = navigationFrame.Width - MenuWidth;
+				navigationFrame.Width = MenuWidth;
+				_menuController.View.Frame = navigationFrame;
+	
+
 			View.AddSubview(_menuController.View);
 
 			ChangeContentView(currentViewController);
@@ -288,7 +308,7 @@ namespace XamarinSidebar
 		private void SetLocation(RectangleF frame)
 		{
 			frame.Y = 0;
-			_contentAreaView.Layer.AnchorPoint = new PointF(.5f, .5f);
+			_contentAreaView.Layer.AnchorPoint = new PointF (.5f, .5f);
 
 			// exit if we're already at the desired location
 			if (_contentAreaView.Frame.Location == frame.Location)
@@ -316,25 +336,43 @@ namespace XamarinSidebar
 		/// </summary>
 		private void Pan(UIView view)
 		{
+			Console.WriteLine (_panGesture.State.ToString ());
 			if (_panGesture.State == UIGestureRecognizerState.Began) {
 				_panOriginX = view.Frame.X;
 				_ignorePan = false;
 			} else if (!_ignorePan && (_panGesture.State == UIGestureRecognizerState.Changed)) {
 				float t = _panGesture.TranslationInView(view).X;
-				Console.WriteLine (t + " " + IsOpen);
-				if (((t < 0) && (IsOpen == false)) || ((t > 0) && (IsOpen == true))) {
-					if (t < -MenuWidth)
-						t = -MenuWidth;
-					else if (t > MenuWidth)
-						t = MenuWidth; 
-					if ((_panOriginX + t) <= 0)
-						view.Frame = new RectangleF (_panOriginX + t, view.Frame.Y, view.Frame.Width, view.Frame.Height);
-					ShowShadowWhileDragging ();
+				Console.WriteLine (t + " " + IsOpen + " " + MenuWidth);
+
+				if (Location == LocationEnum.Left) {
+
+					if (((t > 0) && (IsOpen == false)) || ((t < 0) && (IsOpen == true))) {
+						if (t > MenuWidth)
+							t = MenuWidth;
+						else if (t < MenuWidth)
+						//t = MenuWidth; 
+					if ((_panOriginX + t) <= MenuWidth)
+							view.Frame = new RectangleF (_panOriginX + t, view.Frame.Y, view.Frame.Width, view.Frame.Height);
+						ShowShadowWhileDragging ();
+					}
+
+				} else if (Location == LocationEnum.Right) {
+
+
+					if (((t < 0) && (IsOpen == false)) || ((t > 0) && (IsOpen == true))) {
+						if (t < -MenuWidth)
+							t = -MenuWidth;
+						else if (t > MenuWidth)
+							t = MenuWidth; 
+						if ((_panOriginX + t) <= 0)
+							view.Frame = new RectangleF (_panOriginX + t, view.Frame.Y, view.Frame.Width, view.Frame.Height);
+						ShowShadowWhileDragging ();
+					}
 				}
 			} else if (!_ignorePan && (_panGesture.State == UIGestureRecognizerState.Ended || _panGesture.State == UIGestureRecognizerState.Cancelled)) {
-				float t = _panGesture.TranslationInView(view).X;
+					float t = _panGesture.TranslationInView(view).X;
 				float velocity = _panGesture.VelocityInView(view).X;
-				if ((IsOpen) &&  (t > 0)){
+				if (((Location == LocationEnum.Left) && (IsOpen) &&  (t < 0)) || ((Location == LocationEnum.Right) && (IsOpen) &&  (t > 0))){
 					if (view.Frame.X > -(view.Frame.Width / 2)) {
 						CloseMenu();
 					} else {
@@ -344,8 +382,8 @@ namespace XamarinSidebar
 							}, () => {
 							});
 					}
-				} else {
-					if (velocity < -800.0f || (view.Frame.X < -(MenuWidth / 2))) {
+				} else if(Location == LocationEnum.Left) {
+					if (((velocity < 800.0f) && (velocity > 0f)) || (view.Frame.X < -(MenuWidth / 2))) {
 						OpenMenu();
 					} else {
 						UIView.Animate(_slideSpeed, 0, UIViewAnimationOptions.CurveEaseInOut,
@@ -354,7 +392,17 @@ namespace XamarinSidebar
 							}, () => {
 							});
 					}
+				} else if(Location == LocationEnum.Right) {
+				if (velocity < -800.0f || (view.Frame.X < -(MenuWidth / 2))) {
+					OpenMenu();
+				} else {
+					UIView.Animate(_slideSpeed, 0, UIViewAnimationOptions.CurveEaseInOut,
+						() => {
+							view.Frame = new RectangleF(0, 0, view.Frame.Width, view.Frame.Height);
+						}, () => {
+						});
 				}
+			}
 			}
 		}
 
@@ -493,7 +541,12 @@ namespace XamarinSidebar
 		{
 			base.ViewDidLayoutSubviews();
 			RectangleF navigationFrame = View.Bounds;
-			navigationFrame.X = navigationFrame.Width - MenuWidth;
+
+			if (Location == LocationEnum.Right) {
+				navigationFrame.X = navigationFrame.Width - MenuWidth;
+			} else if (Location == LocationEnum.Left) {
+				navigationFrame.X = 0;
+			}
 			navigationFrame.Width = MenuWidth;
 			if (_menuController.View.Frame != navigationFrame)
 				_menuController.View.Frame = navigationFrame;
@@ -502,7 +555,11 @@ namespace XamarinSidebar
 		public override void ViewWillAppear(bool animated)
 		{
 			RectangleF navigationFrame = _menuController.View.Frame;
-			navigationFrame.X = navigationFrame.Width - MenuWidth;
+			if (Location == LocationEnum.Right) {
+				navigationFrame.X = navigationFrame.Width - MenuWidth;
+			} else if (Location == LocationEnum.Left) {
+				navigationFrame.X = 0;
+			}
 			navigationFrame.Width = MenuWidth;
 			navigationFrame.Location = PointF.Empty;
 			_menuController.View.Frame = navigationFrame;
