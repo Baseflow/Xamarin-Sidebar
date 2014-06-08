@@ -26,6 +26,8 @@ namespace NavigationSample
 			NavController = new NavController();
 			NavController.PushViewController(new IntroController(), false);
 			SidebarController = new XamarinSidebar.SidebarController(this, NavController, new SideMenuController());
+			SidebarController.MenuWidth = 100;
+
 		}
 	}
 }
