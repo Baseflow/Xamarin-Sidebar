@@ -25,7 +25,9 @@ namespace NavigationSample
 			// create a slideout navigation controller with the top navigation controller and the menu view controller
 			NavController = new NavController();
 			NavController.PushViewController(new IntroController(), false);
-			SidebarController = new XamarinSidebar.SidebarController(this, NavController, new SideMenuController());
+			SidebarController = new XamarinSidebar.SidebarController(this, NavController, new SideMenuController(), XamarinSidebar.SidebarController.LocationEnum.Left);
+			SidebarController.MenuWidth = 100;
+
 		}
 	}
 }
