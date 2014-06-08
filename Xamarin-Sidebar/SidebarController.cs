@@ -349,9 +349,9 @@ namespace XamarinSidebar
 					if (((t > 0) && (IsOpen == false)) || ((t < 0) && (IsOpen == true))) {
 						if (t > MenuWidth)
 							t = MenuWidth;
-						else if (t < MenuWidth)
-						//t = MenuWidth; 
-					if ((_panOriginX + t) <= MenuWidth)
+						else if ((t < -MenuWidth) && (IsOpen == true))
+						t = MenuWidth; 
+						if (((_panOriginX + t) <= MenuWidth))
 							view.Frame = new RectangleF (_panOriginX + t, view.Frame.Y, view.Frame.Width, view.Frame.Height);
 						ShowShadowWhileDragging ();
 					}
