@@ -8,7 +8,7 @@ namespace NavigationSample
 	public partial class RootViewController : UIViewController
 	{
 		// the sidebar controller for the app
-		public XamarinSidebar.SidebarController SidebarController { get; private set; }
+		public SidebarNavigation.SidebarController SidebarController { get; private set; }
 
 		// the navigation controller
 		public NavController NavController { get; private set; }
@@ -25,7 +25,7 @@ namespace NavigationSample
 			// create a slideout navigation controller with the top navigation controller and the menu view controller
 			NavController = new NavController();
 			NavController.PushViewController(new IntroController(), false);
-			SidebarController = new XamarinSidebar.SidebarController(this, NavController, new SideMenuController());
+			SidebarController = new SidebarNavigation.SidebarController(this, NavController, new SideMenuController());
 		}
 	}
 }

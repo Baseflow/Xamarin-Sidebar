@@ -4,7 +4,7 @@ using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.CoreGraphics;
 
-namespace XamarinSidebar
+namespace SidebarNavigation
 {
 	public class SidebarController : UIViewController
 	{

@@ -8,7 +8,7 @@ namespace Sample
 	public partial class BaseController : UIViewController
 	{
 		// provide access to the sidebar controller to all inheriting controllers
-		protected XamarinSidebar.SidebarController SidebarController { 
+		protected SidebarNavigation.SidebarController SidebarController { 
 			get {
 				return (UIApplication.SharedApplication.Delegate as AppDelegate).RootViewController.SidebarController;
 			} 

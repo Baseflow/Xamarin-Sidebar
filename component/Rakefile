@@ -5,7 +5,7 @@ require "rake/clean"
 CLEAN.include "*.xam"
 CLEAN.include "xamarin-component"
 
-COMPONENT = "Xamarin-Sidebar-0.5.xam"
+COMPONENT = "SidebarNavigation-1.0.xam"
 
 file "xamarin-component/xamarin-component.exe" do
 	puts "* Downloading xamarin-component..."
@@ -18,7 +18,7 @@ end
 task :default => "xamarin-component/xamarin-component.exe" do
 	line = <<-END
 	mono xamarin-component/xamarin-component.exe create-manually #{COMPONENT} \
-		--name="Xamarin Sidebar" \
+		--name="Sidebar Navigation" \
 		--summary="An easy to use and versatile slideout menu." \
 		--publisher="Jack Dehlin" \
 		--website="https://github.com/jdehlin/Xamarin-Sidebar" \
@@ -26,8 +26,8 @@ task :default => "xamarin-component/xamarin-component.exe" do
 		--details="Details.md" \
 		--license="../LICENSE.md" \
 		--getting-started="GettingStarted.md" \
-		--icon="Xamarin-Sidebar_128x128.png" \
-		--icon="Xamarin-Sidebar_512x512.png" \
+		--icon="SidebarNavigation_128x128.png" \
+		--icon="SidebarNavigation_512x512.png" \
 		--library="ios":"../Xamarin-Sidebar/bin/Release/Xamarin-Sidebar.dll" \
 		--sample="A simple and navigation sample. In the simple sample the menu buttons replace the content view. In the navigation controller the menu buttons push views onto the navigation controller.":"../Xamarin-Sidebar.sln"
 		

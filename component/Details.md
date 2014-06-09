@@ -1,7 +1,7 @@
-Xamarin-Sidebar
+Sidebar Navigation
 ============================
 
-`Xamarin-Sidebar` allows you to provide one UIViewController to be used as a content view
+`Sidebar Navigation` allows you to provide one UIViewController to be used as a content view
 and another to be used as a menu. When you open the menu the content view will slide over
 to reveal the provided menu UIViewController.
 
@@ -13,7 +13,7 @@ content and menu controllers.
 
 `RootViewController.cs`
 ```csharp
-using XamarinSidebar;
+using SidebarNavigation;
 ...
 public partial class RootViewController : UIViewController
 {
