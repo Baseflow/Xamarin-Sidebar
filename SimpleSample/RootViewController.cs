@@ -21,7 +21,7 @@ namespace Sample
 			base.ViewDidLoad();
 
 			// create a slideout navigation controller with the top navigation controller and the menu view controller
-			SidebarController = new SidebarController(this, new IntroController(), new SideMenuController());
+			SidebarController = new SidebarController(this, new IntroController(), new SideMenuController(), SidebarController.LocationEnum.Left);
 		}
 	}
 }
