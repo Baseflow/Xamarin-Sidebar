@@ -8,14 +8,10 @@ namespace SidebarNavigation
 {
 	public class SidebarController : UIViewController
 	{
-		public int MenuWidth{ get; set; }
 		public const int DefaultMenuWidth = 260;
-		private event UITouchEventArgs _shouldReceiveTouch;
 
-		public LocationEnum Location{ get; set; }
-
-		public enum LocationEnum{
-			Left,
+		public enum MenuLocations{
+			Left = 1,
 			Right
 		}
 
@@ -30,17 +26,13 @@ namespace SidebarNavigation
 		private float _panOriginX;
 		private bool _ignorePan;
 
-		/// <summary>
-		/// The view controller for the navigation menu.
-		/// This is what is shown when the the menu is displayed.
-		/// </summary>
-		private UIViewController _menuController;
-
 		// gesture recognizers
 		private UITapGestureRecognizer _tapGesture;
 		private UIPanGestureRecognizer _panGesture;
 
 		private UIImageView _statusImage;
+
+		private event UITouchEventArgs _shouldReceiveTouch;
 
 		#endregion
 
@@ -55,11 +47,7 @@ namespace SidebarNavigation
 		/// The view controller for the side menu.
 		/// This is what will be shown when the menu is displayed.
 		/// </summary>
-		public UIViewController MenuAreaController
-		{
-			get { return _menuController; }
-			private set { _menuController = value; }
-		}
+		public UIViewController MenuAreaController { get; private set; }
 
 		/// <summary>
 		/// Determines if the status bar should be made static.
@@ -71,6 +59,16 @@ namespace SidebarNavigation
 		/// Gets or sets a value indicating whether there should be shadowing effects on the content view.
 		/// </summary>
 		public bool HasShadowing { get; set; }
+
+		/// <summary>
+		/// Determines the width of the menu when open.
+		/// </summary>
+		public int MenuWidth { get; set; }
+
+		/// <summary>
+		/// Determines if the menu is on the left or right of the screen.
+		/// </summary>
+		public MenuLocations MenuLocation { get; set; }
 
 		/// <summary>
 		/// Gets the current state of the menu.
@@ -88,7 +86,7 @@ namespace SidebarNavigation
 					OpenMenu();
 			}
 		}
-
+			
 		#endregion
 
 		#region Private Properties
@@ -126,11 +124,10 @@ namespace SidebarNavigation
 		/// <param name="navigationAreaController">
 		/// The view controller for the side menu.
 		/// </param>
-		public SidebarController(UIViewController rootViewController, UIViewController contentAreaController, UIViewController navigationAreaController, LocationEnum location)
+		public SidebarController(UIViewController rootViewController, UIViewController contentAreaController, UIViewController navigationAreaController)
 		{
-			this.Location = location;
-			this.MenuWidth = DefaultMenuWidth;
 			Initialize(contentAreaController, navigationAreaController);
+
 			// handle wiring things up so events propogate properly
 			rootViewController.AddChildViewController(this);
 			rootViewController.View.AddSubview(this.View);
@@ -168,9 +165,9 @@ namespace SidebarNavigation
 				0, 
 				UIViewAnimationOptions.CurveEaseInOut,
 				() => { 
-					if(Location == LocationEnum.Right){
+					if(MenuLocation == MenuLocations.Right){
 					view.Frame = new RectangleF (-MenuWidth, 0, view.Frame.Width, view.Frame.Height);
-					}else if(Location == LocationEnum.Left){
+					}else if(MenuLocation == MenuLocations.Left){
 					view.Frame = new RectangleF (MenuWidth, 0, view.Frame.Width, view.Frame.Height);
 					}
 				},
@@ -241,7 +238,13 @@ namespace SidebarNavigation
 		private void Initialize(UIViewController currentViewController, UIViewController navigationViewController)
 		{
 			ContentAreaController = currentViewController;
-			_menuController = navigationViewController;
+			MenuAreaController = navigationViewController;
+
+			// place menu on right by default
+			MenuLocation = MenuLocations.Right;
+
+			// set default menu width
+			MenuWidth = DefaultMenuWidth;
 
 			// enable shadow by default
 			HasShadowing = true;
@@ -255,18 +258,13 @@ namespace SidebarNavigation
 			_isIos7 = version.Major >= 7;
 
 			// add the navigation view on the right
-
 			RectangleF navigationFrame;
-
-		
-				navigationFrame = _menuController.View.Frame;
+			navigationFrame = MenuAreaController.View.Frame;
 				navigationFrame.X = navigationFrame.Width - MenuWidth;
 				navigationFrame.Width = MenuWidth;
-				_menuController.View.Frame = navigationFrame;
+			MenuAreaController.View.Frame = navigationFrame;
 	
-
-			View.AddSubview(_menuController.View);
-
+			View.AddSubview(MenuAreaController.View);
 			ChangeContentView(currentViewController);
 		}
 
@@ -336,43 +334,37 @@ namespace SidebarNavigation
 		/// </summary>
 		private void Pan(UIView view)
 		{
-			Console.WriteLine (_panGesture.State.ToString ());
 			if (_panGesture.State == UIGestureRecognizerState.Began) {
 				_panOriginX = view.Frame.X;
 				_ignorePan = false;
 			} else if (!_ignorePan && (_panGesture.State == UIGestureRecognizerState.Changed)) {
 				float t = _panGesture.TranslationInView(view).X;
-				Console.WriteLine (t + " " + IsOpen + " " + MenuWidth);
-
-				if (Location == LocationEnum.Left) {
+				if (MenuLocation == MenuLocations.Left) {
 
 					if (((t > 0) && (IsOpen == false)) || ((t < 0) && (IsOpen == true))) {
 						if (t > MenuWidth)
 							t = MenuWidth;
 						else if ((t < -MenuWidth) && (IsOpen == true))
-						t = MenuWidth; 
+							t = MenuWidth; 
 						if (((_panOriginX + t) <= MenuWidth))
-							view.Frame = new RectangleF (_panOriginX + t, view.Frame.Y, view.Frame.Width, view.Frame.Height);
-						ShowShadowWhileDragging ();
+							view.Frame = new RectangleF(_panOriginX + t, view.Frame.Y, view.Frame.Width, view.Frame.Height);
+						ShowShadowWhileDragging();
 					}
-
-				} else if (Location == LocationEnum.Right) {
-
-
+				} else if (MenuLocation == MenuLocations.Right) {
 					if (((t < 0) && (IsOpen == false)) || ((t > 0) && (IsOpen == true))) {
 						if (t < -MenuWidth)
 							t = -MenuWidth;
 						else if (t > MenuWidth)
 							t = MenuWidth; 
 						if ((_panOriginX + t) <= 0)
-							view.Frame = new RectangleF (_panOriginX + t, view.Frame.Y, view.Frame.Width, view.Frame.Height);
-						ShowShadowWhileDragging ();
+							view.Frame = new RectangleF(_panOriginX + t, view.Frame.Y, view.Frame.Width, view.Frame.Height);
+						ShowShadowWhileDragging();
 					}
 				}
 			} else if (!_ignorePan && (_panGesture.State == UIGestureRecognizerState.Ended || _panGesture.State == UIGestureRecognizerState.Cancelled)) {
-					float t = _panGesture.TranslationInView(view).X;
+				float t = _panGesture.TranslationInView(view).X;
 				float velocity = _panGesture.VelocityInView(view).X;
-				if (((Location == LocationEnum.Left) && (IsOpen) &&  (t < 0)) || ((Location == LocationEnum.Right) && (IsOpen) &&  (t > 0))){
+				if (((MenuLocation == MenuLocations.Left) && (IsOpen) && (t < 0)) || ((MenuLocation == MenuLocations.Right) && (IsOpen) && (t > 0))) {
 					if (view.Frame.X > -(view.Frame.Width / 2)) {
 						CloseMenu();
 					} else {
@@ -380,9 +372,9 @@ namespace SidebarNavigation
 							() => {
 								view.Frame = new RectangleF(-MenuWidth, view.Frame.Y, view.Frame.Width, view.Frame.Height);
 							}, () => {
-							});
+						});
 					}
-				} else if(Location == LocationEnum.Left) {
+				} else if (MenuLocation == MenuLocations.Left) {
 					if (((velocity < 800.0f) && (velocity > 0f)) || (view.Frame.X < -(MenuWidth / 2))) {
 						OpenMenu();
 					} else {
@@ -390,19 +382,20 @@ namespace SidebarNavigation
 							() => {
 								view.Frame = new RectangleF(0, 0, view.Frame.Width, view.Frame.Height);
 							}, () => {
-							});
-					}
-				} else if(Location == LocationEnum.Right) {
-				if (velocity < -800.0f || (view.Frame.X < -(MenuWidth / 2))) {
-					OpenMenu();
-				} else {
-					UIView.Animate(_slideSpeed, 0, UIViewAnimationOptions.CurveEaseInOut,
-						() => {
-							view.Frame = new RectangleF(0, 0, view.Frame.Width, view.Frame.Height);
-						}, () => {
 						});
+					}
+				} else if (MenuLocation == MenuLocations.Right) {
+					if (velocity < -800.0f || (view.Frame.X < -(MenuWidth / 2))) {
+						OpenMenu();
+					} else {
+						UIView.Animate(_slideSpeed, 0, UIViewAnimationOptions.CurveEaseInOut,
+							() => {
+								view.Frame = new RectangleF(0, 0, view.Frame.Width, view.Frame.Height);
+							}, () => {
+						}
+						);
+					}
 				}
-			}
 			}
 		}
 
@@ -542,27 +535,27 @@ namespace SidebarNavigation
 			base.ViewDidLayoutSubviews();
 			RectangleF navigationFrame = View.Bounds;
 
-			if (Location == LocationEnum.Right) {
+			if (MenuLocation == MenuLocations.Right) {
 				navigationFrame.X = navigationFrame.Width - MenuWidth;
-			} else if (Location == LocationEnum.Left) {
+			} else if (MenuLocation == MenuLocations.Left) {
 				navigationFrame.X = 0;
 			}
 			navigationFrame.Width = MenuWidth;
-			if (_menuController.View.Frame != navigationFrame)
-				_menuController.View.Frame = navigationFrame;
+			if (MenuAreaController.View.Frame != navigationFrame)
+				MenuAreaController.View.Frame = navigationFrame;
 		}
 
 		public override void ViewWillAppear(bool animated)
 		{
-			RectangleF navigationFrame = _menuController.View.Frame;
-			if (Location == LocationEnum.Right) {
+			RectangleF navigationFrame = MenuAreaController.View.Frame;
+			if (MenuLocation == MenuLocations.Right) {
 				navigationFrame.X = navigationFrame.Width - MenuWidth;
-			} else if (Location == LocationEnum.Left) {
+			} else if (MenuLocation == MenuLocations.Left) {
 				navigationFrame.X = 0;
 			}
 			navigationFrame.Width = MenuWidth;
 			navigationFrame.Location = PointF.Empty;
-			_menuController.View.Frame = navigationFrame;
+			MenuAreaController.View.Frame = navigationFrame;
 			base.ViewWillAppear(animated);
 		}
 	}

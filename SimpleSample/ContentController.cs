@@ -16,11 +16,11 @@ namespace Sample
 			base.ViewDidLoad();
 			View.BackgroundColor = UIColor.White;
 
-			var title = new UILabel(new RectangleF(0, 50, 320, 20));
+			var title = new UILabel(new RectangleF(0, 50, 320, 30));
 			title.Font = UIFont.SystemFontOfSize(24.0f);
 			title.TextAlignment = UITextAlignment.Center;
 			title.TextColor = UIColor.Blue;
-			title.Text = "Xamarin Sidebar";
+			title.Text = "Sidebar Navigation";
 
 			var body = new UILabel(new RectangleF(50, 120, 220, 100));
 			body.Font = UIFont.SystemFontOfSize(12.0f);
