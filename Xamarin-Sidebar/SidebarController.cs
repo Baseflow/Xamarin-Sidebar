@@ -336,27 +336,29 @@ namespace SidebarNavigation
 		{
 			if (_panGesture.State == UIGestureRecognizerState.Began) {
 				_panOriginX = view.Frame.X;
-				_ignorePan = false;
+				if (MenuLocation == MenuLocations.Left)
+					_ignorePan = _panGesture.LocationInView(view).X > 50;
+				else
+					_ignorePan = _panGesture.LocationInView(view).X < view.Bounds.Width - 50;
 			} else if (!_ignorePan && (_panGesture.State == UIGestureRecognizerState.Changed)) {
 				float t = _panGesture.TranslationInView(view).X;
 				if (MenuLocation == MenuLocations.Left) {
-
-					if (((t > 0) && (IsOpen == false)) || ((t < 0) && (IsOpen == true))) {
+					if ((t > 0 && !IsOpen) || (t < 0 && IsOpen)) {
 						if (t > MenuWidth)
 							t = MenuWidth;
-						else if ((t < -MenuWidth) && (IsOpen == true))
+						else if (t < -MenuWidth && IsOpen)
 							t = MenuWidth; 
-						if (((_panOriginX + t) <= MenuWidth))
+						if (_panOriginX + t <= MenuWidth)
 							view.Frame = new RectangleF(_panOriginX + t, view.Frame.Y, view.Frame.Width, view.Frame.Height);
 						ShowShadowWhileDragging();
 					}
 				} else if (MenuLocation == MenuLocations.Right) {
-					if (((t < 0) && (IsOpen == false)) || ((t > 0) && (IsOpen == true))) {
+					if ((t < 0 && !IsOpen) || (t > 0 && IsOpen)) {
 						if (t < -MenuWidth)
 							t = -MenuWidth;
 						else if (t > MenuWidth)
 							t = MenuWidth; 
-						if ((_panOriginX + t) <= 0)
+						if (_panOriginX + t <= 0)
 							view.Frame = new RectangleF(_panOriginX + t, view.Frame.Y, view.Frame.Width, view.Frame.Height);
 						ShowShadowWhileDragging();
 					}
@@ -364,8 +366,8 @@ namespace SidebarNavigation
 			} else if (!_ignorePan && (_panGesture.State == UIGestureRecognizerState.Ended || _panGesture.State == UIGestureRecognizerState.Cancelled)) {
 				float t = _panGesture.TranslationInView(view).X;
 				float velocity = _panGesture.VelocityInView(view).X;
-				if (((MenuLocation == MenuLocations.Left) && (IsOpen) && (t < 0)) || ((MenuLocation == MenuLocations.Right) && (IsOpen) && (t > 0))) {
-					if (view.Frame.X > -(view.Frame.Width / 2)) {
+				if ((MenuLocation == MenuLocations.Left && IsOpen && t < 0) || (MenuLocation == MenuLocations.Right && IsOpen && t > 0)) {
+					if (view.Frame.X > -view.Frame.Width / 2) {
 						CloseMenu();
 					} else {
 						UIView.Animate(_slideSpeed, 0, UIViewAnimationOptions.CurveEaseInOut,
@@ -375,7 +377,7 @@ namespace SidebarNavigation
 						});
 					}
 				} else if (MenuLocation == MenuLocations.Left) {
-					if (((velocity < 800.0f) && (velocity > 0f)) || (view.Frame.X < -(MenuWidth / 2))) {
+					if ((velocity < 800.0f && velocity > 0f) || (view.Frame.X < -MenuWidth / 2)) {
 						OpenMenu();
 					} else {
 						UIView.Animate(_slideSpeed, 0, UIViewAnimationOptions.CurveEaseInOut,
@@ -392,8 +394,7 @@ namespace SidebarNavigation
 							() => {
 								view.Frame = new RectangleF(0, 0, view.Frame.Width, view.Frame.Height);
 							}, () => {
-						}
-						);
+						});
 					}
 				}
 			}
