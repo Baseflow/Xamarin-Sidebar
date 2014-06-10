@@ -63,5 +63,14 @@ otherContentButton.TouchUpInside += (sender, e) => {
 };
 ```
 
+Additional options include hiding the shadow, setting the menu width, and placing the menu 
+on the left.
+
+```csharp
+SidebarController.HasShadowing = false;
+SidebarController.MenuWidth = 220;
+SidebarController.MenuLocation = SidebarController.MenuLocations.Left;
+```
+
 See the sample projects included in the [source](https://github.com/jdehlin/Xamarin-Sidebar) for more details.
 Contact the author on Twitter: [JackDehlin](https://twitter.com/JackDehlin)

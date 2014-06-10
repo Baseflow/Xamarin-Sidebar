@@ -1,11 +1,9 @@
 require "rake/clean"
 
-
-
 CLEAN.include "*.xam"
 CLEAN.include "xamarin-component"
 
-COMPONENT = "SidebarNavigation-1.0.xam"
+COMPONENT = "SidebarNavigation-1.1.xam"
 
 file "xamarin-component/xamarin-component.exe" do
 	puts "* Downloading xamarin-component..."
