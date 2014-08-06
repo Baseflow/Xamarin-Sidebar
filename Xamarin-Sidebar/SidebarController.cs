@@ -8,6 +8,8 @@ namespace SidebarNavigation
 {
 	public class SidebarController : UIViewController
 	{
+		public const float DefaultFlingPercentage = 0.5f;
+        	public const float DefaultFlingVelocity = 800f;
 		public const int DefaultMenuWidth = 260;
 
 		public enum MenuLocations{
@@ -42,6 +44,16 @@ namespace SidebarNavigation
 		/// The view shown in the content area.
 		/// </summary>
 		public UIViewController ContentAreaController { get; private set; }
+
+	        /// <summary>
+	        /// Determines the percent of width to complete slide action.
+	        /// </summary>
+	        public float FlingPercentage { get; set; }
+	
+	        /// <summary>
+	        /// Determines the minimum velocity considered a "fling" to complete slide action.
+	        /// </summary>
+	        public float FlingVelocity { get; set; }
 
 		/// <summary>
 		/// The view controller for the side menu.
@@ -240,6 +252,12 @@ namespace SidebarNavigation
 			ContentAreaController = currentViewController;
 			MenuAreaController = navigationViewController;
 
+            // set default fling percentage
+            FlingPercentage = DefaultFlingPercentage;
+
+            // set default fling velocity
+            FlingVelocity = DefaultFlingVelocity;
+
 			// place menu on right by default
 			MenuLocation = MenuLocations.Right;
 
@@ -376,27 +394,18 @@ namespace SidebarNavigation
 							}, () => {
 						});
 					}
-				} else if (MenuLocation == MenuLocations.Left) {
-					if ((velocity < 800.0f && velocity > 0f) || (view.Frame.X < -MenuWidth / 2)) {
-						OpenMenu();
-					} else {
-						UIView.Animate(_slideSpeed, 0, UIViewAnimationOptions.CurveEaseInOut,
-							() => {
-								view.Frame = new RectangleF(0, 0, view.Frame.Width, view.Frame.Height);
-							}, () => {
-						});
-					}
-				} else if (MenuLocation == MenuLocations.Right) {
-					if (velocity < -800.0f || (view.Frame.X < -(MenuWidth / 2))) {
-						OpenMenu();
-					} else {
-						UIView.Animate(_slideSpeed, 0, UIViewAnimationOptions.CurveEaseInOut,
-							() => {
-								view.Frame = new RectangleF(0, 0, view.Frame.Width, view.Frame.Height);
-							}, () => {
-						});
-					}
-				}
+                } if ((MenuLocation == MenuLocations.Left && (velocity > FlingVelocity || view.Frame.X > (MenuWidth * FlingPercentage)))
+                    || (MenuLocation == MenuLocations.Right && (velocity < -FlingVelocity || view.Frame.X < -(MenuWidth * FlingPercentage)))) {
+                    OpenMenu();
+                } else {
+                    UIView.Animate(_slideSpeed, 0, UIViewAnimationOptions.CurveEaseInOut,
+                        () =>
+                        {
+                            view.Frame = new RectangleF(0, 0, view.Frame.Width, view.Frame.Height);
+                        }, () =>
+                        {
+                        });
+                }
 			}
 		}
 
