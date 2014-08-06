@@ -9,7 +9,7 @@ namespace SidebarNavigation
 	public class SidebarController : UIViewController
 	{
 		public const float DefaultFlingPercentage = 0.5f;
-        	public const float DefaultFlingVelocity = 800f;
+    	public const float DefaultFlingVelocity = 800f;
 		public const int DefaultMenuWidth = 260;
 
 		public enum MenuLocations{
@@ -45,15 +45,15 @@ namespace SidebarNavigation
 		/// </summary>
 		public UIViewController ContentAreaController { get; private set; }
 
-	        /// <summary>
-	        /// Determines the percent of width to complete slide action.
-	        /// </summary>
-	        public float FlingPercentage { get; set; }
-	
-	        /// <summary>
-	        /// Determines the minimum velocity considered a "fling" to complete slide action.
-	        /// </summary>
-	        public float FlingVelocity { get; set; }
+        /// <summary>
+        /// Determines the percent of width to complete slide action.
+        /// </summary>
+        public float FlingPercentage { get; set; }
+
+        /// <summary>
+        /// Determines the minimum velocity considered a "fling" to complete slide action.
+        /// </summary>
+        public float FlingVelocity { get; set; }
 
 		/// <summary>
 		/// The view controller for the side menu.
