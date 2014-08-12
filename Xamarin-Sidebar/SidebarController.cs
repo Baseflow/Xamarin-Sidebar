@@ -228,8 +228,8 @@ namespace SidebarNavigation
 			if (_contentAreaView != null)
 				_contentAreaView.RemoveFromSuperview();
 			ContentAreaController = newContentView;
-			CloseMenu(true);
 			SetVisibleView();
+			CloseMenu();
 			// setup a tap gesture to close the menu on root view tap
 			_tapGesture = new UITapGestureRecognizer ();
 			_tapGesture.AddTarget (() => CloseMenu());
@@ -293,10 +293,9 @@ namespace SidebarNavigation
 		{
 			if(!StatusBarMoves)
 				UIApplication.SharedApplication.SetStatusBarHidden(false, UIStatusBarAnimation.Fade);
-			bool isOpen = false;
 
 			RectangleF frame = View.Bounds;
-			if (isOpen)
+			if (IsOpen)
 				frame.X = MenuWidth;
 
 			SetViewSize();
