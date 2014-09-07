@@ -3,7 +3,7 @@ Xamarin-Sidebar
 
 A slideout navigation control for Xamarin iOS applications.
 
-![Menu Open](https://raw.githubusercontent.com/jdehlin/Xamarin-Sidebar/master/Screenshots/Second.png)
+![Menu Open](https://raw.githubusercontent.com/jdehlin/Xamarin-Sidebar/master/Screenshots/Transition.png)
 
 This is partly based on two other good slideout menu implementation that each didn't 
 provide quite what I was looking for. Those two are 
