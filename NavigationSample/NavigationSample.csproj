@@ -126,6 +126,7 @@
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\Xamarin-Sidebar\Xamarin-Sidebar.csproj">
       <Project>{4046DF23-7FA6-4662-938D-FA3FF45DB144}</Project>
