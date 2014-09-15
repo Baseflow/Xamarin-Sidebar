@@ -23,6 +23,7 @@ namespace SidebarNavigation
 		private bool _isIos7 = false;
 		private bool _isOpen = false;
 		private bool _shadowShown;
+		private bool _openWhenRotated = false;
 
 		// for swipe gesture
 		private float _panOriginX;
@@ -71,6 +72,11 @@ namespace SidebarNavigation
 		/// Gets or sets a value indicating whether there should be shadowing effects on the content view.
 		/// </summary>
 		public bool HasShadowing { get; set; }
+
+		/// <summary>
+		/// Determines if the menu should be reopened after the screen is roated.
+		/// </summary>
+		public bool ReopenOnRotate { get; set; }
 
 		/// <summary>
 		/// Determines the width of the menu when open.
@@ -266,6 +272,9 @@ namespace SidebarNavigation
 
 			// enable shadow by default
 			HasShadowing = true;
+
+			// enable menu reopening on rotate by default
+			ReopenOnRotate = true;
 
 			// make the status bar static
 			StatusBarMoves = true;
@@ -566,6 +575,22 @@ namespace SidebarNavigation
 			navigationFrame.Location = PointF.Empty;
 			MenuAreaController.View.Frame = navigationFrame;
 			base.ViewWillAppear(animated);
+		}
+
+		public override void WillRotate(UIInterfaceOrientation toInterfaceOrientation, double duration)
+		{
+			base.WillRotate(toInterfaceOrientation, duration);
+			if (IsOpen)
+				_openWhenRotated = true;
+			this.CloseMenu(false);
+		}
+
+		public override void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
+		{
+			base.DidRotate(fromInterfaceOrientation);
+			if (_openWhenRotated && ReopenOnRotate)
+				OpenMenu();
+			_openWhenRotated = false;
 		}
 	}
 }

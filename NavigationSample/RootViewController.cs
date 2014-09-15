@@ -27,6 +27,7 @@ namespace NavigationSample
 			NavController.PushViewController(new IntroController(), false);
 			SidebarController = new SidebarNavigation.SidebarController(this, NavController, new SideMenuController());
 			SidebarController.MenuWidth = 220;
+			SidebarController.ReopenOnRotate = false;
 		}
 	}
 }
