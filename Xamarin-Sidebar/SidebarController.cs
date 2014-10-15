@@ -574,6 +574,7 @@ namespace SidebarNavigation
 			navigationFrame.Width = MenuWidth;
 			navigationFrame.Location = PointF.Empty;
 			MenuAreaController.View.Frame = navigationFrame;
+			View.SetNeedsLayout();
 			base.ViewWillAppear(animated);
 		}
 
