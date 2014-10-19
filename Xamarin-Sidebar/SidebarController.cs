@@ -161,8 +161,6 @@ namespace SidebarNavigation
 		/// </summary>
 		public void ToggleMenu()
 		{
-			if (!IsOpen && ContentAreaController != null && ContentAreaController.IsViewLoaded)
-				ResignFirstResponders(ContentAreaController.View);
 			if (IsOpen)
 				CloseMenu();
 			else
@@ -178,6 +176,7 @@ namespace SidebarNavigation
 				return;
 			ShowShadow(5);
 			var view = _contentAreaView;
+			view.EndEditing(true);
 			UIView.Animate(
 				_slideSpeed, 
 				0, 
@@ -204,6 +203,7 @@ namespace SidebarNavigation
 		{
 			if (!IsOpen)
 				return;
+			MenuAreaController.View.EndEditing(true);
 			var view = _contentAreaView;
 			// define the animation
 			NSAction animation = () => { view.Frame = new RectangleF (0, 0, view.Frame.Width, view.Frame.Height); };
@@ -241,7 +241,7 @@ namespace SidebarNavigation
 			_tapGesture.AddTarget (() => CloseMenu());
 			_tapGesture.NumberOfTapsRequired = 1;
 			_panGesture = new UIPanGestureRecognizer {
-				Delegate = new SlideoutPanDelegate(this),
+				Delegate = new SlideoutPanDelegate(),
 				MaximumNumberOfTouches = 1,
 				MinimumNumberOfTouches = 1
 			};
@@ -519,29 +519,10 @@ namespace SidebarNavigation
 			return true;
 		}
 
-		private void ResignFirstResponders(UIView view)
-		{
-			if (view.Subviews == null)
-				return;
-			foreach (UIView subview in view.Subviews)
-			{
-				if (subview.IsFirstResponder)
-					subview.ResignFirstResponder();
-				ResignFirstResponders(subview);
-			}
-		}
-
 		#endregion
 
 		private class SlideoutPanDelegate : UIGestureRecognizerDelegate
 		{
-			private readonly UIViewController _controller;
-
-			public SlideoutPanDelegate (UIViewController controller)
-			{
-				_controller = controller;
-			}
-
 			public override bool ShouldReceiveTouch (UIGestureRecognizer recognizer, UITouch touch)
 			{
 				return true;
