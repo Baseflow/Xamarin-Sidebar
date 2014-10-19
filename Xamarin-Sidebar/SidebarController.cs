@@ -155,8 +155,6 @@ namespace SidebarNavigation
 		/// </summary>
 		public void ToggleMenu()
 		{
-			if (!IsOpen && ContentAreaController != null && ContentAreaController.IsViewLoaded)
-				ContentAreaController.View.EndEditing(true);
 			if (IsOpen)
 				CloseMenu();
 			else
@@ -172,6 +170,7 @@ namespace SidebarNavigation
 				return;
 			ShowShadow(5);
 			var view = _contentAreaView;
+			view.EndEditing(true);
 			UIView.Animate(
 				_slideSpeed, 
 				0, 
@@ -198,6 +197,7 @@ namespace SidebarNavigation
 		{
 			if (!IsOpen)
 				return;
+			MenuAreaController.View.EndEditing(true);
 			var view = _contentAreaView;
 			// define the animation
 			NSAction animation = () => { view.Frame = new RectangleF (0, 0, view.Frame.Width, view.Frame.Height); };
