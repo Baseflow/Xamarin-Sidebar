@@ -156,7 +156,7 @@ namespace SidebarNavigation
 		public void ToggleMenu()
 		{
 			if (!IsOpen && ContentAreaController != null && ContentAreaController.IsViewLoaded)
-				ResignFirstResponders(ContentAreaController.View);
+				ContentAreaController.View.EndEditing(true);
 			if (IsOpen)
 				CloseMenu();
 			else
@@ -509,18 +509,6 @@ namespace SidebarNavigation
 			if (_shouldReceiveTouch != null)
 				return _shouldReceiveTouch(gesture, touch);
 			return true;
-		}
-
-		private void ResignFirstResponders(UIView view)
-		{
-			if (view.Subviews == null)
-				return;
-			foreach (UIView subview in view.Subviews)
-			{
-				if (subview.IsFirstResponder)
-					subview.ResignFirstResponder();
-				ResignFirstResponders(subview);
-			}
 		}
 
 		#endregion
