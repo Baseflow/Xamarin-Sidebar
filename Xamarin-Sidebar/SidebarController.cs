@@ -235,7 +235,7 @@ namespace SidebarNavigation
 			_tapGesture.AddTarget (() => CloseMenu());
 			_tapGesture.NumberOfTapsRequired = 1;
 			_panGesture = new UIPanGestureRecognizer {
-				Delegate = new SlideoutPanDelegate(this),
+				Delegate = new SlideoutPanDelegate(),
 				MaximumNumberOfTouches = 1,
 				MinimumNumberOfTouches = 1
 			};
@@ -527,13 +527,6 @@ namespace SidebarNavigation
 
 		private class SlideoutPanDelegate : UIGestureRecognizerDelegate
 		{
-			private readonly UIViewController _controller;
-
-			public SlideoutPanDelegate (UIViewController controller)
-			{
-				_controller = controller;
-			}
-
 			public override bool ShouldReceiveTouch (UIGestureRecognizer recognizer, UITouch touch)
 			{
 				return true;
