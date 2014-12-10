@@ -89,6 +89,11 @@ namespace SidebarNavigation
 		public MenuLocations MenuLocation { get; set; }
 
 		/// <summary>
+		/// This Event will be called when the Side Menu is Opened/closed( at the end of the animation)
+		/// The Event Arg is a Boolean = isOpen.
+		/// </summary>
+		public event EventHandler<Boolean> StateChangeHandler;
+		/// <summary>
 		/// Gets the current state of the menu.
 		/// Setting this property will open/close the menu respectively.
 		/// </summary>
@@ -193,6 +198,12 @@ namespace SidebarNavigation
 						view.Subviews[0].UserInteractionEnabled = false;
 					view.AddGestureRecognizer(_tapGesture);
 					_isOpen = true;
+					if(StateChangeHandler!=null){
+
+
+						StateChangeHandler.Invoke(this,_isOpen);
+					}
+
 				});
 		}
 
@@ -213,6 +224,9 @@ namespace SidebarNavigation
 					view.Subviews[0].UserInteractionEnabled = true;
 				view.RemoveGestureRecognizer (_tapGesture);
 				_isOpen = false;
+				if(StateChangeHandler!=null){
+					StateChangeHandler.Invoke(this,_isOpen);
+				}
 			};
 			if (animate)
 				UIView.Animate(_slideSpeed, 0, UIViewAnimationOptions.CurveEaseInOut, animation, finished);
