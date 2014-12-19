@@ -1,8 +1,23 @@
 using System;
-using MonoTouch.UIKit;
 using System.Drawing;
+
+#if __UNIFIED__
+using UIKit;
+using Foundation;
+using CoreGraphics;
+
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
+#else
+using MonoTouch.UIKit;
 using MonoTouch.Foundation;
 using MonoTouch.CoreGraphics;
+
+using nfloat = global::System.Single;
+using nint = global::System.Int32;
+using nuint = global::System.UInt32;
+#endif
 
 namespace SidebarNavigation
 {
@@ -19,14 +34,14 @@ namespace SidebarNavigation
 
 		#region Private Fields
 
-		private float _slideSpeed = 0.2f;
+		private nfloat _slideSpeed = 0.2f;
 		private bool _isIos7 = false;
 		private bool _isOpen = false;
 		private bool _shadowShown;
 		private bool _openWhenRotated = false;
 
 		// for swipe gesture
-		private float _panOriginX;
+		private nfloat _panOriginX;
 		private bool _ignorePan;
 
 		// gesture recognizers
@@ -205,10 +220,15 @@ namespace SidebarNavigation
 				return;
 			MenuAreaController.View.EndEditing(true);
 			var view = _contentAreaView;
-			// define the animation
-			NSAction animation = () => { view.Frame = new RectangleF (0, 0, view.Frame.Width, view.Frame.Height); };
-			// define the action for finished animation
-			NSAction finished = () => {
+			#if __UNIFIED__
+			Action animation;
+			Action finished;
+			#else
+			NSAction animation;
+			NSAction finished;
+			#endif
+			animation = () => { view.Frame = new RectangleF (0, 0, view.Frame.Width, view.Frame.Height); };
+			finished = () => {
 				if (view.Subviews.Length > 0)
 					view.Subviews[0].UserInteractionEnabled = true;
 				view.RemoveGestureRecognizer (_tapGesture);
@@ -367,7 +387,7 @@ namespace SidebarNavigation
 				else
 					_ignorePan = _panGesture.LocationInView(view).X < view.Bounds.Width - 50;
 			} else if (!_ignorePan && (_panGesture.State == UIGestureRecognizerState.Changed)) {
-				float t = _panGesture.TranslationInView(view).X;
+				var t = _panGesture.TranslationInView(view).X;
 				if (MenuLocation == MenuLocations.Left) {
 					if ((t > 0 && !IsOpen) || (t < 0 && IsOpen)) {
 						if (t > MenuWidth)
@@ -390,8 +410,8 @@ namespace SidebarNavigation
 					}
 				}
 			} else if (!_ignorePan && (_panGesture.State == UIGestureRecognizerState.Ended || _panGesture.State == UIGestureRecognizerState.Cancelled)) {
-				float t = _panGesture.TranslationInView(view).X;
-				float velocity = _panGesture.VelocityInView(view).X;
+				var t = _panGesture.TranslationInView(view).X;
+				var velocity = _panGesture.VelocityInView(view).X;
 				if ((MenuLocation == MenuLocations.Left && IsOpen && t < 0) || (MenuLocation == MenuLocations.Right && IsOpen && t > 0)) {
 					if (view.Frame.X > -view.Frame.Width / 2) {
 						CloseMenu();
