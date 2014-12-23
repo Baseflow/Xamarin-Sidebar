@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSample", "SimpleSampl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NavigationSample", "NavigationSample\NavigationSample.csproj", "{A495E6C0-334A-4A3F-BBCB-F20FD893D216}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin-Sidebar-Unified", "..\..\..\Projects\xamarin\Xamarin-Sidebar\Xamarin-Sidebar-Unified\Xamarin-Sidebar-Unified.csproj", "{72600F4A-51F2-4E93-8688-8198DE0F8EF4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin-Sidebar-Unified", "Xamarin-Sidebar-Unified\Xamarin-Sidebar-Unified.csproj", "{72600F4A-51F2-4E93-8688-8198DE0F8EF4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
