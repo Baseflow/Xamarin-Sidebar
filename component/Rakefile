@@ -3,7 +3,7 @@ require "rake/clean"
 CLEAN.include "*.xam"
 CLEAN.include "xamarin-component"
 
-COMPONENT = "SidebarNavigation-1.4.xam"
+COMPONENT = "SidebarNavigation-1.5.xam"
 
 file "xamarin-component/xamarin-component.exe" do
 	puts "* Downloading xamarin-component..."
@@ -27,6 +27,7 @@ task :default => "xamarin-component/xamarin-component.exe" do
 		--icon="SidebarNavigation_128x128.png" \
 		--icon="SidebarNavigation_512x512.png" \
 		--library="ios":"../Xamarin-Sidebar/bin/Release/Xamarin-Sidebar.dll" \
+		--library="ios-unified":"../Xamarin-Sidebar-Unified/bin/Release/Xamarin-Sidebar-Unified.dll" \
 		--sample="A simple and navigation sample. In the simple sample the menu buttons replace the content view. In the navigation controller the menu buttons push views onto the navigation controller.":"../Xamarin-Sidebar.sln"
 		
 		END

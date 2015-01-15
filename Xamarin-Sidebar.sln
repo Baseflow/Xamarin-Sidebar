@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NavigationSample", "Navigat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin-Sidebar-Unified", "Xamarin-Sidebar-Unified\Xamarin-Sidebar-Unified.csproj", "{72600F4A-51F2-4E93-8688-8198DE0F8EF4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnifiedSample", "..\..\..\Projects\xamarin\Xamarin-Sidebar\UnifiedSample\UnifiedSample.csproj", "{C3E1AED5-7C73-474F-B527-76D04EAFC13F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,8 +87,24 @@ Global
 		{A495E6C0-334A-4A3F-BBCB-F20FD893D216}.Release|iPhone.Build.0 = Release|iPhone
 		{A495E6C0-334A-4A3F-BBCB-F20FD893D216}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
 		{A495E6C0-334A-4A3F-BBCB-F20FD893D216}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.Ad-Hoc|iPhone.ActiveCfg = Ad-Hoc|iPhone
+		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.Ad-Hoc|iPhone.Build.0 = Ad-Hoc|iPhone
+		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.AppStore|iPhone.ActiveCfg = AppStore|iPhone
+		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.AppStore|iPhone.Build.0 = AppStore|iPhone
+		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
+		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.Debug|Any CPU.Build.0 = Debug|iPhoneSimulator
+		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.Debug|iPhone.Build.0 = Debug|iPhone
+		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.Release|Any CPU.ActiveCfg = Release|iPhoneSimulator
+		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.Release|Any CPU.Build.0 = Release|iPhoneSimulator
+		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.Release|iPhone.ActiveCfg = Release|iPhone
+		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.Release|iPhone.Build.0 = Release|iPhone
+		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = NavigationSample\NavigationSample.csproj
+		StartupItem = ..\..\..\Projects\xamarin\Xamarin-Sidebar\UnifiedSample\UnifiedSample.csproj
 	EndGlobalSection
 EndGlobal
