@@ -107,25 +107,10 @@
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="BaseController.cs" />
-    <Compile Include="BaseController.designer.cs">
-      <DependentUpon>BaseController.cs</DependentUpon>
-    </Compile>
     <Compile Include="ContentController.cs" />
-    <Compile Include="ContentController.designer.cs">
-      <DependentUpon>ContentController.cs</DependentUpon>
-    </Compile>
     <Compile Include="IntroController.cs" />
-    <Compile Include="IntroController.designer.cs">
-      <DependentUpon>IntroController.cs</DependentUpon>
-    </Compile>
     <Compile Include="RootViewController.cs" />
-    <Compile Include="RootViewController.designer.cs">
-      <DependentUpon>RootViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="SideMenuController.cs" />
-    <Compile Include="SideMenuController.designer.cs">
-      <DependentUpon>SideMenuController.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
