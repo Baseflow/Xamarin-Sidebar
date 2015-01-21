@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin-Sidebar", "Xamarin-Sidebar\Xamarin-Sidebar.csproj", "{4046DF23-7FA6-4662-938D-FA3FF45DB144}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSample", "SimpleSample\SimpleSample.csproj", "{7779A8B9-7734-4208-8F38-CB5114383BAB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NavigationSample", "NavigationSample\NavigationSample.csproj", "{A495E6C0-334A-4A3F-BBCB-F20FD893D216}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin-Sidebar-Unified", "Xamarin-Sidebar-Unified\Xamarin-Sidebar-Unified.csproj", "{72600F4A-51F2-4E93-8688-8198DE0F8EF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnifiedSample", "..\..\..\Projects\xamarin\Xamarin-Sidebar\UnifiedSample\UnifiedSample.csproj", "{C3E1AED5-7C73-474F-B527-76D04EAFC13F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NavigationSample", "component\samples\NavigationSample\NavigationSample\NavigationSample.csproj", "{A495E6C0-334A-4A3F-BBCB-F20FD893D216}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NavigationUnifiedSample", "..\..\..\Projects\xamarin\Xamarin-Sidebar\NavigationUnifiedSample\NavigationUnifiedSample.csproj", "{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NavigationUnifiedSample", "component\samples\NavigationUnifiedSample\NavigationUnifiedSample\NavigationUnifiedSample.csproj", "{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSample", "component\samples\SimpleSample\SimpleSample\SimpleSample.csproj", "{7779A8B9-7734-4208-8F38-CB5114383BAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnifiedSample", "component\samples\UnifiedSample\UnifiedSample\UnifiedSample.csproj", "{C3E1AED5-7C73-474F-B527-76D04EAFC13F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
