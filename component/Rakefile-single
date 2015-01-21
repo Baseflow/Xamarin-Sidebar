@@ -28,10 +28,7 @@ task :default => "xamarin-component/xamarin-component.exe" do
 		--icon="SidebarNavigation_512x512.png" \
 		--library="ios":"../Xamarin-Sidebar/bin/Release/Xamarin-Sidebar.dll" \
 		--library="ios-unified":"../Xamarin-Sidebar-Unified/bin/Release/Xamarin-Sidebar-Unified.dll" \
-		--sample="A simple sample. In this simple sample the menu buttons replace the content view. ":"samples/SimpleSample/SimpleSample.sln" \
-		--sample="A navigation sample. In this sample the the menu buttons push views onto a navigation controller.":"samples/NavigationSample/NavigationSample.sln" \
-		--sample="A simple Unified API sample. In this simple sample the menu buttons replace the content view. ":"samples/UnifiedSample/UnifiedSample.sln" \
-		--sample="A navigation Unified API sample. In this sample the the menu buttons push views onto a navigation controller.":"samples/NavigationUnifiedSample/NavigationUnifiedSample.sln" 
+		--sample="A simple and navigation sample. In the simple sample the menu buttons replace the content view. In the navigation controller the menu buttons push views onto the navigation controller.":"../Xamarin-Sidebar.sln"
 		
 		END
 	puts "* Creating #{COMPONENT}..."

@@ -92,6 +92,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
+    <Reference Include="Xamarin-Sidebar-Unified">
+      <HintPath>..\Xamarin-Sidebar-Unified\bin\Release\Xamarin-Sidebar-Unified.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
@@ -113,10 +116,4 @@
     <Compile Include="SideMenuController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\Xamarin-Sidebar-Unified\Xamarin-Sidebar-Unified.csproj">
-      <Project>{72600F4A-51F2-4E93-8688-8198DE0F8EF4}</Project>
-      <Name>Xamarin-Sidebar-Unified</Name>
-    </ProjectReference>
-  </ItemGroup>
 </Project>

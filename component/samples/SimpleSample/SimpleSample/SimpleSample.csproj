@@ -22,6 +22,7 @@
     <MtouchLink>None</MtouchLink>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchDebug>true</MtouchDebug>
+    <CodesignKey>iPhone Developer</CodesignKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>full</DebugType>
@@ -90,7 +91,7 @@
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
     <Reference Include="Xamarin-Sidebar">
-      <HintPath>..\Xamarin-Sidebar\bin\Release\Xamarin-Sidebar.dll</HintPath>
+      <HintPath>..\..\..\..\Xamarin-Sidebar\bin\Release\Xamarin-Sidebar.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

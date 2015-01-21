@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin-Sidebar-Unified", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnifiedSample", "..\..\..\Projects\xamarin\Xamarin-Sidebar\UnifiedSample\UnifiedSample.csproj", "{C3E1AED5-7C73-474F-B527-76D04EAFC13F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NavigationUnifiedSample", "..\..\..\Projects\xamarin\Xamarin-Sidebar\NavigationUnifiedSample\NavigationUnifiedSample.csproj", "{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,8 +105,21 @@ Global
 		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.Release|iPhone.Build.0 = Release|iPhone
 		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
 		{C3E1AED5-7C73-474F-B527-76D04EAFC13F}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = ..\..\..\Projects\xamarin\Xamarin-Sidebar\UnifiedSample\UnifiedSample.csproj
+		{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}.Ad-Hoc|iPhone.ActiveCfg = Ad-Hoc|iPhone
+		{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}.Ad-Hoc|iPhone.Build.0 = Ad-Hoc|iPhone
+		{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}.AppStore|iPhone.ActiveCfg = AppStore|iPhone
+		{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}.AppStore|iPhone.Build.0 = AppStore|iPhone
+		{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
+		{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}.Debug|Any CPU.Build.0 = Debug|iPhoneSimulator
+		{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}.Debug|iPhone.Build.0 = Debug|iPhone
+		{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}.Release|Any CPU.ActiveCfg = Release|iPhoneSimulator
+		{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}.Release|Any CPU.Build.0 = Release|iPhoneSimulator
+		{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}.Release|iPhone.ActiveCfg = Release|iPhone
+		{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}.Release|iPhone.Build.0 = Release|iPhone
+		{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{DF605F5E-C39C-44E1-9A61-7B7F66C8718A}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
 	EndGlobalSection
 EndGlobal

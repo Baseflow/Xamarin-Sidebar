@@ -3,12 +3,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
-    <ProjectGuid>{7779A8B9-7734-4208-8F38-CB5114383BAB}</ProjectGuid>
+    <ProjectGuid>{A495E6C0-334A-4A3F-BBCB-F20FD893D216}</ProjectGuid>
     <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Sample</RootNamespace>
+    <RootNamespace>NavigationSample</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>Sample</AssemblyName>
+    <AssemblyName>NavigationSample</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -90,11 +90,12 @@
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
     <Reference Include="Xamarin-Sidebar">
-      <HintPath>..\Xamarin-Sidebar\bin\Release\Xamarin-Sidebar.dll</HintPath>
+      <HintPath>..\..\..\..\Xamarin-Sidebar\bin\Release\Xamarin-Sidebar.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />
+    <BundleResource Include="Resources\threelines.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -111,17 +112,21 @@
     <Compile Include="SideMenuController.designer.cs">
       <DependentUpon>SideMenuController.cs</DependentUpon>
     </Compile>
-    <Compile Include="ContentController.cs" />
-    <Compile Include="ContentController.designer.cs">
-      <DependentUpon>ContentController.cs</DependentUpon>
+    <Compile Include="BaseController.cs" />
+    <Compile Include="BaseController.designer.cs">
+      <DependentUpon>BaseController.cs</DependentUpon>
     </Compile>
     <Compile Include="IntroController.cs" />
     <Compile Include="IntroController.designer.cs">
       <DependentUpon>IntroController.cs</DependentUpon>
     </Compile>
-    <Compile Include="BaseController.cs" />
-    <Compile Include="BaseController.designer.cs">
-      <DependentUpon>BaseController.cs</DependentUpon>
+    <Compile Include="ContentController.cs" />
+    <Compile Include="ContentController.designer.cs">
+      <DependentUpon>ContentController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NavController.cs" />
+    <Compile Include="NavController.designer.cs">
+      <DependentUpon>NavController.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
