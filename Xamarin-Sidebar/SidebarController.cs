@@ -253,6 +253,10 @@ namespace SidebarNavigation
 		public void ChangeContentView(UIViewController newContentView) {
 			if (_contentAreaView != null)
 				_contentAreaView.RemoveFromSuperview();
+            
+            if (ContentAreaController != null)
+                ContentAreaController.RemoveFromParentViewController ();
+            
 			ContentAreaController = newContentView;
 			SetVisibleView();
 			CloseMenu();
