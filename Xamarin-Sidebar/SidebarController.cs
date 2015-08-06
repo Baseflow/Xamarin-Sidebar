@@ -462,7 +462,7 @@ namespace SidebarNavigation
 				return;
 
 			// don't add an offset if the menu is on the left
-			var xOffset = (MenuLocation == MenuLocations.Left) ? 0 : 5;
+			var xOffset = (MenuLocation == MenuLocations.Left) ? -5 : 5;
 
 			_contentAreaView.Layer.ShadowOffset = new SizeF(xOffset, 0);
 			_contentAreaView.Layer.ShadowPath = UIBezierPath.FromRect (_contentAreaView.Bounds).CGPath;
@@ -481,7 +481,7 @@ namespace SidebarNavigation
 				return;
 
 			// don't add an offset if the menu is on the left
-			position = (MenuLocation == MenuLocations.Left) ? 0 : position;
+			position = (MenuLocation == MenuLocations.Left) ? -position : position;
 
 			_contentAreaView.Layer.ShadowOffset = new SizeF(position, 0);
 			_contentAreaView.Layer.ShadowPath = UIBezierPath.FromRect (_contentAreaView.Bounds).CGPath;
