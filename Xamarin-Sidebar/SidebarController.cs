@@ -460,7 +460,11 @@ namespace SidebarNavigation
 		{
 			if (!HasShadowing)
 				return;
-			_contentAreaView.Layer.ShadowOffset = new SizeF(5, 0);
+
+			// don't add an offset if the menu is on the left
+			var xOffset = (MenuLocation == MenuLocations.Left) ? 0 : 5;
+
+			_contentAreaView.Layer.ShadowOffset = new SizeF(xOffset, 0);
 			_contentAreaView.Layer.ShadowPath = UIBezierPath.FromRect (_contentAreaView.Bounds).CGPath;
 			_contentAreaView.Layer.ShadowRadius = 4.0f;
 			_contentAreaView.Layer.ShadowOpacity = 0.5f;
@@ -475,6 +479,10 @@ namespace SidebarNavigation
 			//Dont need to call this twice if its already shown
 			if (!HasShadowing || _shadowShown)
 				return;
+
+			// don't add an offset if the menu is on the left
+			position = (MenuLocation == MenuLocations.Left) ? 0 : position;
+
 			_contentAreaView.Layer.ShadowOffset = new SizeF(position, 0);
 			_contentAreaView.Layer.ShadowPath = UIBezierPath.FromRect (_contentAreaView.Bounds).CGPath;
 			_contentAreaView.Layer.ShadowRadius = 4.0f;
