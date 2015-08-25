@@ -26,6 +26,7 @@ namespace SidebarNavigation
 		public const float DefaultFlingPercentage = 0.5f;
     	public const float DefaultFlingVelocity = 800f;
 		public const int DefaultMenuWidth = 260;
+		public const int DefaultGestureActiveArea = 50;
 
 		public enum MenuLocations{
 			Left = 1,
@@ -70,6 +71,11 @@ namespace SidebarNavigation
         /// Determines the minimum velocity considered a "fling" to complete slide action.
         /// </summary>
         public float FlingVelocity { get; set; }
+
+		/// <summary>
+		/// Active area where the Pan gesture is intercepted.
+		/// </summary>
+		public float GestureActiveArea { get; set; }
 
 		/// <summary>
 		/// The view controller for the side menu.
@@ -300,6 +306,9 @@ namespace SidebarNavigation
             // set default fling velocity
             FlingVelocity = DefaultFlingVelocity;
 
+			// set default gesture active area
+			GestureActiveArea = DefaultGestureActiveArea;
+
 			// place menu on right by default
 			MenuLocation = MenuLocations.Right;
 
@@ -399,9 +408,9 @@ namespace SidebarNavigation
 			if (_panGesture.State == UIGestureRecognizerState.Began) {
 				_panOriginX = view.Frame.X;
 				if (MenuLocation == MenuLocations.Left)
-					_ignorePan = _panGesture.LocationInView(view).X > 50;
+					_ignorePan = _panGesture.LocationInView(view).X > this.GestureActiveArea;
 				else
-					_ignorePan = _panGesture.LocationInView(view).X < view.Bounds.Width - 50;
+					_ignorePan = _panGesture.LocationInView(view).X < view.Bounds.Width - this.GestureActiveArea;
 			} else if (!_ignorePan && (_panGesture.State == UIGestureRecognizerState.Changed)) {
 				var t = _panGesture.TranslationInView(view).X;
 				if (MenuLocation == MenuLocations.Left) {
