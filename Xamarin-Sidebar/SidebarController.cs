@@ -270,8 +270,18 @@ namespace SidebarNavigation
 		/// </param>
 		public void ChangeContentView(UIViewController newContentView) {
 			if (_contentAreaView != null)
+			{
 				_contentAreaView.RemoveFromSuperview();
-            
+
+				// Ensure the old gesture recognizers are removed from the view to prevent usability conflicts
+				// especially if this view is re shown at a later time.
+				if (_tapGesture != null && IsOpen)
+					_contentAreaView.RemoveGestureRecognizer (_tapGesture);
+				if (_panGesture != null)
+					_contentAreaView.RemoveGestureRecognizer (_panGesture); 
+			}
+			if (_contentAreaView != null)
+				_contentAreaView.RemoveFromSuperview();
             if (ContentAreaController != null)
                 ContentAreaController.RemoveFromParentViewController ();
             
