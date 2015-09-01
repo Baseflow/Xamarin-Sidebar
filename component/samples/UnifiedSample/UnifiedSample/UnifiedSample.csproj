@@ -34,7 +34,6 @@
     <MtouchArch>i386</MtouchArch>
     <MtouchLink>None</MtouchLink>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
@@ -115,4 +114,10 @@
     <Compile Include="SideMenuController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Xamarin-Sidebar-Unified\Xamarin-Sidebar-Unified.csproj">
+      <Project>{72600F4A-51F2-4E93-8688-8198DE0F8EF4}</Project>
+      <Name>Xamarin-Sidebar-Unified</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
