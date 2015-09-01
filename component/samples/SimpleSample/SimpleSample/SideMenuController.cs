@@ -45,10 +45,18 @@ namespace Sample
 				SidebarController.ChangeContentView(new ContentController());
 			};
 
+			var disableButton = new UIButton(UIButtonType.System);
+			disableButton.Frame = new RectangleF(0, 260, 260, 20);
+			disableButton.SetTitle("Toggle Disabled", UIControlState.Normal);
+			disableButton.TouchUpInside += (sender, e) => {
+				SidebarController.Disabled = !SidebarController.Disabled;
+			};
+
 			View.Add(title);
 			View.Add(body);
 			View.Add(introButton);
 			View.Add(contentButton);
+			View.Add(disableButton);
 		}
 	}
 }

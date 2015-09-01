@@ -38,9 +38,17 @@ You can also drag the menu open from the right side of the screen";
 				SidebarController.ToggleMenu();
 			};
 
+			var disableButton = new UIButton(UIButtonType.System);
+			disableButton.Frame = new RectangleF(50, 300, 220, 30);
+			disableButton.SetTitle("Toggle Disabled", UIControlState.Normal);
+			disableButton.TouchUpInside += (sender, e) => {
+				SidebarController.Disabled = !SidebarController.Disabled;
+			};
+
 			View.Add(title);
 			View.Add(body);
 			View.Add(menuButton);
+			View.Add(disableButton);
 		}
 	}
 }

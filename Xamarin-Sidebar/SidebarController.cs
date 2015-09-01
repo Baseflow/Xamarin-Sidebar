@@ -77,6 +77,26 @@ namespace SidebarNavigation
 		/// </summary>
 		public float GestureActiveArea { get; set; }
 
+		bool disabled;
+		/// <summary>
+		/// Disables all open/close actions when set to true.
+		/// </summary>
+		public bool Disabled {
+			get {
+				return disabled;
+			}
+			set {
+				if (value) {
+					_panGesture.Enabled = false;
+					_tapGesture.Enabled = false;
+				} else {
+					_panGesture.Enabled = true;
+					_tapGesture.Enabled = true;
+				}
+				disabled = value;
+			}
+		}
+
 		/// <summary>
 		/// The view controller for the side menu.
 		/// This is what will be shown when the menu is displayed.
@@ -199,7 +219,7 @@ namespace SidebarNavigation
 		/// </summary>
 		public void OpenMenu()
 		{
-			if (IsOpen)
+			if (IsOpen || Disabled)
 				return;
 			ShowShadow(5);
 			var view = _contentAreaView;
@@ -231,7 +251,7 @@ namespace SidebarNavigation
 		/// </summary>
 		public void CloseMenu(bool animate = true)
 		{
-			if (!IsOpen)
+			if (!IsOpen || Disabled)
 				return;
 			MenuAreaController.View.EndEditing(true);
 			var view = _contentAreaView;
@@ -415,6 +435,8 @@ namespace SidebarNavigation
 		/// </summary>
 		private void Pan(UIView view)
 		{
+			if (Disabled)
+				return;
 			if (_panGesture.State == UIGestureRecognizerState.Began) {
 				_panOriginX = view.Frame.X;
 				if (MenuLocation == MenuLocations.Left)
