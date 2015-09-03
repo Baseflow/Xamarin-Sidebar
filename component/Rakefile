@@ -3,7 +3,7 @@ require "rake/clean"
 CLEAN.include "*.xam"
 CLEAN.include "xamarin-component"
 
-COMPONENT = "SidebarNavigation-1.8.xam"
+COMPONENT = "SidebarNavigation-1.9.xam"
 
 file "xamarin-component/xamarin-component.exe" do
 	puts "* Downloading xamarin-component..."
@@ -31,7 +31,8 @@ task :default => "xamarin-component/xamarin-component.exe" do
 		--sample="A simple sample. In this simple sample the menu buttons replace the content view. ":"samples/SimpleSample/SimpleSample.sln" \
 		--sample="A navigation sample. In this sample the the menu buttons push views onto a navigation controller.":"samples/NavigationSample/NavigationSample.sln" \
 		--sample="A simple Unified API sample. In this simple sample the menu buttons replace the content view. ":"samples/UnifiedSample/UnifiedSample.sln" \
-		--sample="A navigation Unified API sample. In this sample the the menu buttons push views onto a navigation controller.":"samples/NavigationUnifiedSample/NavigationUnifiedSample.sln" 
+		--sample="A navigation Unified API sample. In this sample the the menu buttons push views onto a navigation controller.":"samples/NavigationUnifiedSample/NavigationUnifiedSample.sln" \
+		--sample="A navigation Unified API sample using a Storyboard. In this sample the the menu buttons push views created from the storyboard onto a navigation controller.":"samples/StoryboardSample/StoryboardSample.sln" 
 		
 		END
 	puts "* Creating #{COMPONENT}..."
