@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>SidebarNavigation</id>
+		<version>1.9.0</version>
+		<title>SidebarNavigation</title>
+		<authors>Jack Dehlin</authors>
+		<owners>Jack Dehlin</owners>
+		<licenseUrl>http://opensource.org/licenses/ms-pl.html</licenseUrl>
+		<projectUrl>https://github.com/jdehlin/Xamarin-Sidebar</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>Sidebar navigation for Xamarin.iOS</description>
+		<tags>xamarin Xamarin.iOS10 Sidebar iOS</tags>
+		<iconUrl>http://components.xamarin.com/resources/icons/component-2082/icon_114x114.png</iconUrl>
+		<dependencies>
+		</dependencies>
+	</metadata>
+	<files>
+		<!-- src -->
+		<file src="..\Xamarin-Sidebar\*.cs" target="src\Xamarin-Sidebar" />
+
+		<!-- touch -->
+		<file src="..\Xamarin-Sidebar\bin\Release\Xamarin-Sidebar.*" target="lib\Xamarin.iOS10" />
+	</files>
+</package>
+
+
+
+
+
+
+
