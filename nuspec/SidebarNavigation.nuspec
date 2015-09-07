@@ -23,10 +23,3 @@
 		<file src="..\Xamarin-Sidebar\bin\Release\Xamarin-Sidebar.*" target="lib\Xamarin.iOS10" />
 	</files>
 </package>
-
-
-
-
-
-
-
