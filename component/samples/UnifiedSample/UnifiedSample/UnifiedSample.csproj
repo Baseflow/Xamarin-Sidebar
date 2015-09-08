@@ -113,6 +113,7 @@
     <Compile Include="IntroController.cs" />
     <Compile Include="RootViewController.cs" />
     <Compile Include="SideMenuController.cs" />
+    <Compile Include="SubMenuController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>

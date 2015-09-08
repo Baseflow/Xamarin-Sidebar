@@ -169,6 +169,19 @@ namespace SidebarNavigation
 			}
 		}
 
+		/// <summary>
+		/// The UIView of the menu view controller.
+		/// </summary>
+		private UIView _menuAreaView
+		{
+			get
+			{
+				if (MenuAreaController == null)
+					return null;
+				return MenuAreaController.View;
+			}
+		}
+
 		#endregion
 
 		#region Constructors
@@ -306,7 +319,7 @@ namespace SidebarNavigation
                 ContentAreaController.RemoveFromParentViewController ();
             
 			ContentAreaController = newContentView;
-			SetVisibleView();
+			SetVisibleContentView();
 			CloseMenu();
 			// setup a tap gesture to close the menu on root view tap
 			_tapGesture = new UITapGestureRecognizer ();
@@ -319,6 +332,22 @@ namespace SidebarNavigation
 			};
 			_panGesture.AddTarget (() => Pan (_contentAreaView));
 			_contentAreaView.AddGestureRecognizer(_panGesture);
+		}
+			
+		/// <summary>
+		/// Replaces the menu area view controller with the specified view controller.
+		/// </summary>
+		/// <param name="newContentView">
+		/// New menu view.
+		/// </param>
+		public void ChangeMenuView(UIViewController newMenuView) {
+			if (_menuAreaView != null)
+				_menuAreaView.RemoveFromSuperview();
+			if (MenuAreaController != null)
+				MenuAreaController.RemoveFromParentViewController ();
+
+			MenuAreaController = newMenuView;
+			SetVisibleMenuView();
 		}
 
 		#endregion
@@ -362,18 +391,18 @@ namespace SidebarNavigation
 			// add the navigation view on the right
 			RectangleF navigationFrame;
 			navigationFrame = MenuAreaController.View.Frame;
-				navigationFrame.X = navigationFrame.Width - MenuWidth;
-				navigationFrame.Width = MenuWidth;
+			navigationFrame.X = navigationFrame.Width - MenuWidth;
+			navigationFrame.Width = MenuWidth;
 			MenuAreaController.View.Frame = navigationFrame;
 	
-			View.AddSubview(MenuAreaController.View);
+			View.AddSubview(_menuAreaView);
 			ChangeContentView(currentViewController);
 		}
 
 		/// <summary>
 		/// Places the root view on top of the navigation view.
 		/// </summary>
-		private void SetVisibleView()
+		private void SetVisibleContentView()
 		{
 			if(!StatusBarMoves)
 				UIApplication.SharedApplication.SetStatusBarHidden(false, UIStatusBarAnimation.Fade);
@@ -428,6 +457,20 @@ namespace SidebarNavigation
 				statusFrame.X = _contentAreaView.Frame.X;
 				_statusImage.Frame = statusFrame;
 			}
+		}
+
+		/// <summary>
+		/// Places the root view on top of the navigation view.
+		/// </summary>
+		private void SetVisibleMenuView()
+		{
+			RectangleF navigationFrame;
+			navigationFrame = MenuAreaController.View.Frame;
+			navigationFrame.X = navigationFrame.Width - MenuWidth;
+			navigationFrame.Width = MenuWidth;
+			MenuAreaController.View.Frame = navigationFrame;
+			View.AddSubview(_menuAreaView);
+			View.SendSubviewToBack(_menuAreaView);
 		}
 
 		/// <summary>

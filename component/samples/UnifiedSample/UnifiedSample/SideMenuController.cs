@@ -8,9 +8,6 @@ namespace Sample
 {
 	public partial class SideMenuController : BaseController
 	{
-		// the sidebar controller for the app
-		SidebarNavigation.SidebarController _sidebarController;
-
 		public SideMenuController() : base(null, null)
 		{
 		}
@@ -46,10 +43,18 @@ namespace Sample
 				SidebarController.ChangeContentView(new ContentController());
 			};
 
+			var subMenuButton = new UIButton(UIButtonType.System);
+			subMenuButton.Frame = new RectangleF(0, 260, 260, 20);
+			subMenuButton.SetTitle("Sub Menu", UIControlState.Normal);
+			subMenuButton.TouchUpInside += (sender, e) => {
+				SidebarController.ChangeMenuView(new SubMenuController());
+			};
+
 			View.Add(title);
 			View.Add(body);
 			View.Add(introButton);
 			View.Add(contentButton);
+			View.Add(subMenuButton);
 		}
 	}
 }
