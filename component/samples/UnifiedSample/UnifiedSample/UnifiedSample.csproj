@@ -94,6 +94,9 @@
     <Reference Include="Xamarin-Sidebar-Unified">
       <HintPath>..\..\..\..\Xamarin-Sidebar-Unified\bin\Release\Xamarin-Sidebar-Unified.dll</HintPath>
     </Reference>
+    <Reference Include="Calabash">
+      <HintPath>..\..\..\..\packages\Xamarin.TestCloud.Agent.0.13.0\lib\Xamarin.iOS10\Calabash.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
@@ -104,6 +107,7 @@
   <ItemGroup>
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -121,5 +125,11 @@
       <Project>{72600F4A-51F2-4E93-8688-8198DE0F8EF4}</Project>
       <Name>Xamarin-Sidebar-Unified</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <XamarinComponentReference Include="calabash">
+      <Version>13.0</Version>
+      <Visible>False</Visible>
+    </XamarinComponentReference>
   </ItemGroup>
 </Project>
