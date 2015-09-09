@@ -41,5 +41,9 @@
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
     <Compile Include="SidebarController.cs" />
+    <Compile Include="MenuLocations.cs" />
+    <Compile Include="SidebarMenuArea.cs" />
+    <Compile Include="SidebarContentArea.cs" />
+    <Compile Include="Sidebar.cs" />
   </ItemGroup>
 </Project>

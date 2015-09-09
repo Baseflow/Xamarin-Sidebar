@@ -91,9 +91,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
-    <Reference Include="Xamarin-Sidebar-Unified">
-      <HintPath>..\..\..\..\Xamarin-Sidebar-Unified\bin\Release\Xamarin-Sidebar-Unified.dll</HintPath>
-    </Reference>
     <Reference Include="Calabash">
       <HintPath>..\..\..\..\packages\Xamarin.TestCloud.Agent.0.13.0\lib\Xamarin.iOS10\Calabash.dll</HintPath>
     </Reference>

@@ -86,7 +86,7 @@ namespace UITests
 		public void CanOpenMenuWithFlick()
 		{
 			AssertMenuClosed();
-			app.DragCoordinates(15, 50, 200, 50, TimeSpan.FromMilliseconds(800));
+			app.DragCoordinates(15, 50, 250, 50, TimeSpan.FromMilliseconds(1000));
 			AssertMenuOpen();
 		}
 
