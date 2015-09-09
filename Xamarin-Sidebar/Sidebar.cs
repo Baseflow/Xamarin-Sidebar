@@ -48,7 +48,6 @@ namespace SidebarNavigation
 			_sidebarContentArea = new SidebarContentArea(contentViewController);
 			_sidebarMenuArea = new SidebarMenuArea(menuViewController);
 
-			SetVersion();
 			SetDefaults();
 			SetupGestureRecognizers();
 		}
@@ -90,13 +89,9 @@ namespace SidebarNavigation
 
 		public float GestureActiveArea { get; set; }
 
-		public bool StatusBarMoves { get; set; }
-
 		public bool HasShadowing { get; set; }
 
 		public bool ReopenOnRotate { get; set; }
-
-		public bool IsIos7 { get; private set; }
 
 		public bool Disabled {
 			get {
@@ -167,10 +162,6 @@ namespace SidebarNavigation
 			_sidebarContentArea.Pan(this);
 		}
 			
-		public void HideStatusBarImage() {
-			_sidebarContentArea.HideStatusBarImage(IsIos7);
-		}
-
 
 		private void RemoveContentView() {
 			if (ContentViewController.View != null)
@@ -209,11 +200,6 @@ namespace SidebarNavigation
 			_shadowShown = false;
 		}
 
-		private void SetVersion() {
-			var version = new System.Version(UIDevice.CurrentDevice.SystemVersion);
-			IsIos7 = version.Major >= 7;
-		}
-
 		private void SetDefaults() {
 			FlingPercentage = Sidebar.DefaultFlingPercentage;
 			FlingVelocity = Sidebar.DefaultFlingVelocity;
@@ -222,7 +208,6 @@ namespace SidebarNavigation
 			MenuWidth = Sidebar.DefaultMenuWidth;
 			HasShadowing = true;
 			ReopenOnRotate = true;
-			StatusBarMoves = true;
 		}
 
 		private void SetupGestureRecognizers() {

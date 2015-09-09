@@ -108,15 +108,6 @@ namespace SidebarNavigation
 		}
 
 		/// <summary>
-		/// Determines if the status bar should be made static.
-		/// </summary>
-		/// <value>True to make the status bar static, false to make it move with the content area.</value>
-		public bool StatusBarMoves {
-			get { return _sidebar.StatusBarMoves; }
-			set { _sidebar.StatusBarMoves = value; }
-		}
-
-		/// <summary>
 		/// Gets or sets a value indicating whether there should be shadowing effects on the content view.
 		/// </summary>
 		public bool HasShadowing {
@@ -209,8 +200,6 @@ namespace SidebarNavigation
 		/// </param>
 		public void ChangeContentView(UIViewController newContentView) {
 			_sidebar.ChangeContentView(newContentView);
-			if(!StatusBarMoves)
-				UIApplication.SharedApplication.SetStatusBarHidden(false, UIStatusBarAnimation.Fade);
 			AddContentViewToSidebar();
 			CloseMenu();
 		}
@@ -229,6 +218,7 @@ namespace SidebarNavigation
 
 		private void AddContentViewToSidebar()
 		{
+			
 			SetContentViewBounds();
 			SetContentViewPosition();
 			View.AddSubview(ContentAreaController.View);
@@ -273,16 +263,6 @@ namespace SidebarNavigation
 			rootViewController.AddChildViewController(this);
 			rootViewController.View.AddSubview(this.View);
 			this.DidMoveToParentViewController(rootViewController);
-		}
-
-
-		/// <summary>
-		/// Hides the static status bar when the close animation completes.
-		/// </summary>
-		[Export("animationEnded")]
-		private void HideComplete()
-		{
-			_sidebar.HideStatusBarImage();
 		}
 
 

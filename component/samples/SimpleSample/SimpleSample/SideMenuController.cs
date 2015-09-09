@@ -7,9 +7,6 @@ namespace Sample
 {
 	public partial class SideMenuController : BaseController
 	{
-		// the sidebar controller for the app
-		SidebarNavigation.SidebarController _sidebarController;
-
 		public SideMenuController() : base(null, null)
 		{
 		}

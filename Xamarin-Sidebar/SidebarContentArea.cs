@@ -25,7 +25,6 @@ namespace SidebarNavigation
 	{
 		private bool _ignorePan;
 		private nfloat _panOriginX;
-		private UIImageView _statusImage = new UIImageView();
 
 
 		public UIViewController ContentViewController { get; set; }
@@ -141,21 +140,6 @@ namespace SidebarNavigation
 			}
 		}
 
-		public void HideStatusBarImage(bool isIos7)
-		{
-			if (!isIos7)
-				return;
-			_statusImage.RemoveFromSuperview();
-			UIApplication.SharedApplication.StatusBarHidden = false;
-		}
-
-
-		private void SetStatusBarImage(bool statusBarMoves, bool isIos7) {
-			GetStatusBarImage(statusBarMoves, isIos7);
-			var statusFrame = _statusImage.Frame;
-			statusFrame.X = ContentViewController.View.Frame.X;
-			_statusImage.Frame = statusFrame;
-		}
 
 		private void ShowShadowWhileDragging(bool hasShadowing, MenuLocations menuLocation)
 		{
@@ -167,27 +151,6 @@ namespace SidebarNavigation
 			ContentViewController.View.Layer.ShadowRadius = 4.0f;
 			ContentViewController.View.Layer.ShadowOpacity = 0.5f;
 			ContentViewController.View.Layer.ShadowColor = UIColor.Black.CGColor;
-		}
-			
-		private void GetStatusBarImage(bool statusBarMoves, bool isIos7)
-		{
-			if (statusBarMoves || !isIos7 || _statusImage.Superview != null)
-				return;
-			ContentViewController.View.AddSubview(_statusImage);
-			_statusImage.Image = CaptureStatusBarImage();
-			_statusImage.Frame = UIApplication.SharedApplication.StatusBarFrame;
-			UIApplication.SharedApplication.StatusBarHidden = true;
-		}
-
-		private UIImage CaptureStatusBarImage()
-		{
-			var frame = UIApplication.SharedApplication.StatusBarFrame;
-			frame.Width *= 2;
-			frame.Height *= 2;
-			var image = CGImage.ScreenImage;
-			image = image.WithImageInRect(frame);
-			var newImage = new UIImage(image).Scale(UIApplication.SharedApplication.StatusBarFrame.Size, 2f);
-			return newImage;
 		}
 	}
 }
