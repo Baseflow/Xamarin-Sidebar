@@ -28,15 +28,16 @@ namespace SidebarNavigation
 		public const int DefaultMenuWidth = 260;
 		public const int DefaultGestureActiveArea = 50;
 
+
 		public static readonly nfloat SlideSpeed = 0.2f;
 
 
+		private bool _isOpen = false;
 		private bool _disabled = false;
 		private bool _shadowShown = false;
 
 		private SidebarContentArea _sidebarContentArea;
 		private SidebarMenuArea _sidebarMenuArea;
-
 
 
 		public Sidebar(
@@ -49,6 +50,7 @@ namespace SidebarNavigation
 
 			SetVersion();
 			SetDefaults();
+			SetupGestureRecognizers();
 		}
 
 
@@ -61,13 +63,26 @@ namespace SidebarNavigation
 			get { return _sidebarMenuArea.MenuViewController; } 
 			set { _sidebarMenuArea.MenuViewController = value; }
 		}
+			
+		public bool IsOpen {
+			get {
+				return _isOpen;
+			}
+			set {
+				_isOpen = value;
+				if (StateChangeHandler != null) {
+					StateChangeHandler.Invoke(this, _isOpen);
+				}
+			}
+		}
 
+		public int MenuWidth { get; set; }
 
-		public UITapGestureRecognizer TapGesture { get; set; }
+		public MenuLocations MenuLocation { get; set; }
 
-		public UIPanGestureRecognizer PanGesture { get; set; }
+		public UITapGestureRecognizer TapGesture { get; private set; }
 
-		public bool IsIos7 { get; private set; }
+		public UIPanGestureRecognizer PanGesture { get; private set; }
 
 		public float FlingPercentage { get; set; }
 
@@ -75,33 +90,30 @@ namespace SidebarNavigation
 
 		public float GestureActiveArea { get; set; }
 
-		public bool Disabled {
-			get {
-				return _disabled;
-			}
-			set {
-				if (value) {
-					PanGesture.Enabled = false;
-					TapGesture.Enabled = false;
-				} else {
-					PanGesture.Enabled = true;
-					TapGesture.Enabled = true;
-				}
-				_disabled = value;
-			}
-		}
-
 		public bool StatusBarMoves { get; set; }
 
 		public bool HasShadowing { get; set; }
 
 		public bool ReopenOnRotate { get; set; }
 
-		public int MenuWidth { get; set; }
+		public bool IsIos7 { get; private set; }
 
-		public MenuLocations MenuLocation { get; set; }
+		public bool Disabled {
+			get {
+				return _disabled;
+			}
+			set {
+				_disabled = value;
+				if (_disabled) {
+					PanGesture.Enabled = false;
+					TapGesture.Enabled = false;
+				} else {
+					PanGesture.Enabled = true;
+					TapGesture.Enabled = true;
+				}
+			}
+		}
 
-		public bool IsOpen { get; set; }
 
 		public event EventHandler<bool> StateChangeHandler;
 
@@ -111,20 +123,15 @@ namespace SidebarNavigation
 			if (IsOpen || Disabled)
 				return;
 			ShowShadow();
-			_sidebarContentArea.ContentViewController.View.EndEditing(true);
+			_sidebarContentArea.BeforeOpenAnimation();
 			UIView.Animate(
 				Sidebar.SlideSpeed, 
 				0, 
 				UIViewAnimationOptions.CurveEaseInOut,
 				() => { _sidebarContentArea.OpenAnimation(MenuLocation, MenuWidth); },
 				() => {
-					if (_sidebarContentArea.ContentViewController.View.Subviews.Length > 0)
-						_sidebarContentArea.ContentViewController.View.Subviews[0].UserInteractionEnabled = false;
-					_sidebarContentArea.ContentViewController.View.AddGestureRecognizer(TapGesture);
+					_sidebarContentArea.AfterOpenAnimation(TapGesture);
 					IsOpen = true;
-					if (StateChangeHandler != null) {
-						StateChangeHandler.Invoke(this, IsOpen);
-					}
 				});
 		}
 
@@ -133,33 +140,39 @@ namespace SidebarNavigation
 			if (!IsOpen || Disabled)
 				return;
 			MenuViewController.View.EndEditing(true);
-			#if __UNIFIED__
-			Action animation;
-			Action finished;
-			#else
-			NSAction animation;
-			NSAction finished;
-			#endif
-			animation = () => { _sidebarContentArea.CloseAnimation(); };
-			finished = () => {
-				if (_sidebarContentArea.ContentViewController.View.Subviews.Length > 0)
-					_sidebarContentArea.ContentViewController.View.Subviews[0].UserInteractionEnabled = true;
-				_sidebarContentArea.ContentViewController.View.RemoveGestureRecognizer (TapGesture);
-				IsOpen = false;
-				if (StateChangeHandler != null) {
-					StateChangeHandler.Invoke(this, IsOpen);
-				}
-			};
-			if (animate)
-				UIView.Animate(Sidebar.SlideSpeed, 0, UIViewAnimationOptions.CurveEaseInOut, animation, finished);
-			else {
-				animation();
-				finished();
-			}
+			UIView.Animate(
+				animate ? Sidebar.SlideSpeed : 0, 
+				0, 
+				UIViewAnimationOptions.CurveEaseInOut, 
+				() => { _sidebarContentArea.CloseAnimation(); }, 
+				() => {
+					_sidebarContentArea.AfterCloseAnimation(TapGesture);
+					IsOpen = false;
+				});
 			HideShadow();
 		}
 
 		public void ChangeContentView(UIViewController newContentView) {
+			RemoveContentView();
+			ContentViewController = newContentView;
+			ContentViewController.View.AddGestureRecognizer(PanGesture);
+		}
+
+		public void ChangeMenuView(UIViewController newMenuView) {
+			RemoveMenuView();
+			MenuViewController = newMenuView;
+		}
+
+		public void Pan() {
+			_sidebarContentArea.Pan(this);
+		}
+			
+		public void HideStatusBarImage() {
+			_sidebarContentArea.HideStatusBarImage(IsIos7);
+		}
+
+
+		private void RemoveContentView() {
 			if (ContentViewController.View != null)
 			{
 				ContentViewController.View.RemoveFromSuperview();
@@ -169,54 +182,15 @@ namespace SidebarNavigation
 					ContentViewController.View.RemoveGestureRecognizer (PanGesture); 
 			}
 			if (ContentViewController != null)
-				ContentViewController.RemoveFromParentViewController ();
-
-			ContentViewController = newContentView;
-
-			// setup a tap gesture to close the menu on root view tap
-			TapGesture = new UITapGestureRecognizer ();
-			TapGesture.AddTarget (() => CloseMenu());
-			TapGesture.NumberOfTapsRequired = 1;
-			PanGesture = new UIPanGestureRecognizer {
-				Delegate = new SlideoutPanDelegate(),
-				MaximumNumberOfTouches = 1,
-				MinimumNumberOfTouches = 1
-			};
-			PanGesture.AddTarget (() => Pan());
-			ContentViewController.View.AddGestureRecognizer(PanGesture);
+				ContentViewController.RemoveFromParentViewController();
 		}
 
-		public void ChangeMenuView(UIViewController newMenuView) {
+		private void RemoveMenuView() {
 			if (MenuViewController.View != null)
 				MenuViewController.View.RemoveFromSuperview();
 			if (MenuViewController != null)
-				MenuViewController.RemoveFromParentViewController ();
-			MenuViewController = newMenuView;
+				MenuViewController.RemoveFromParentViewController();
 		}
-
-
-
-		private class SlideoutPanDelegate : UIGestureRecognizerDelegate
-		{
-			public override bool ShouldReceiveTouch (UIGestureRecognizer recognizer, UITouch touch)
-			{
-				return true;
-			}
-		}
-
-		public void Pan() {
-			_sidebarContentArea.Pan(this);
-		}
-
-		public void SetStatusBarImage() {
-			_sidebarContentArea.SetStatusBarImage(StatusBarMoves, IsIos7);
-		}
-
-		public void HideStatusBarImage() {
-			_sidebarContentArea.HideStatusBarImage(IsIos7);
-		}
-
-
 
 		private void ShowShadow()
 		{
@@ -249,6 +223,27 @@ namespace SidebarNavigation
 			HasShadowing = true;
 			ReopenOnRotate = true;
 			StatusBarMoves = true;
+		}
+
+		private void SetupGestureRecognizers() {
+			TapGesture = new UITapGestureRecognizer ();
+			TapGesture.AddTarget (() => CloseMenu());
+			TapGesture.NumberOfTapsRequired = 1;
+			PanGesture = new UIPanGestureRecognizer {
+				Delegate = new SlideoutPanDelegate(),
+				MaximumNumberOfTouches = 1,
+				MinimumNumberOfTouches = 1
+			};
+			PanGesture.AddTarget(() => Pan());
+		}
+
+
+		private class SlideoutPanDelegate : UIGestureRecognizerDelegate
+		{
+			public override bool ShouldReceiveTouch (UIGestureRecognizer recognizer, UITouch touch)
+			{
+				return true;
+			}
 		}
 	}
 }

@@ -23,6 +23,8 @@ namespace SidebarNavigation
 {
 	internal class SidebarContentArea
 	{
+		private bool _ignorePan;
+		private nfloat _panOriginX;
 		private UIImageView _statusImage = new UIImageView();
 
 
@@ -49,6 +51,10 @@ namespace SidebarNavigation
 			ContentViewController.View.Layer.ShadowColor = UIColor.Clear.CGColor;
 		}
 
+		public void BeforeOpenAnimation() {
+			ContentViewController.View.EndEditing(true);
+		}
+
 		public void OpenAnimation(MenuLocations menuLocation, int menuWidth) {
 			if (menuLocation == MenuLocations.Right){
 				ContentViewController.View.Frame = 
@@ -59,18 +65,23 @@ namespace SidebarNavigation
 			}
 		}
 
+		public void AfterOpenAnimation(UITapGestureRecognizer tapGesture) {
+			if (ContentViewController.View.Subviews.Length > 0)
+				ContentViewController.View.Subviews[0].UserInteractionEnabled = false;
+			ContentViewController.View.AddGestureRecognizer(tapGesture);
+		}
+
 		public void CloseAnimation() {
 			ContentViewController.View.Frame = 
 				new RectangleF (0, 0, ContentViewController.View.Frame.Width, ContentViewController.View.Frame.Height);
 		}
 
+		public void AfterCloseAnimation(UITapGestureRecognizer tapGesture) {
+			if (ContentViewController.View.Subviews.Length > 0)
+				ContentViewController.View.Subviews[0].UserInteractionEnabled = true;
+			ContentViewController.View.RemoveGestureRecognizer(tapGesture);
+		}
 
-		private nfloat _panOriginX;
-		private bool _ignorePan;
-
-		/// <summary>
-		/// Pan the specified view.
-		/// </summary>
 		public void Pan(Sidebar sidebar)
 		{
 			if (sidebar.PanGesture.State == UIGestureRecognizerState.Began) {
@@ -130,9 +141,22 @@ namespace SidebarNavigation
 			}
 		}
 
-		/// <summary>
-		/// Shows the shadow of the root view while dragging.
-		/// </summary>
+		public void HideStatusBarImage(bool isIos7)
+		{
+			if (!isIos7)
+				return;
+			_statusImage.RemoveFromSuperview();
+			UIApplication.SharedApplication.StatusBarHidden = false;
+		}
+
+
+		private void SetStatusBarImage(bool statusBarMoves, bool isIos7) {
+			GetStatusBarImage(statusBarMoves, isIos7);
+			var statusFrame = _statusImage.Frame;
+			statusFrame.X = ContentViewController.View.Frame.X;
+			_statusImage.Frame = statusFrame;
+		}
+
 		private void ShowShadowWhileDragging(bool hasShadowing, MenuLocations menuLocation)
 		{
 			if (!hasShadowing)
@@ -144,17 +168,7 @@ namespace SidebarNavigation
 			ContentViewController.View.Layer.ShadowOpacity = 0.5f;
 			ContentViewController.View.Layer.ShadowColor = UIColor.Black.CGColor;
 		}
-
-		public void SetStatusBarImage(bool statusBarMoves, bool isIos7) {
-			GetStatusBarImage(statusBarMoves, isIos7);
-			var statusFrame = _statusImage.Frame;
-			statusFrame.X = ContentViewController.View.Frame.X;
-			_statusImage.Frame = statusFrame;
-		}
-
-		/// <summary>
-		/// Places the static status image.
-		/// </summary>
+			
 		private void GetStatusBarImage(bool statusBarMoves, bool isIos7)
 		{
 			if (statusBarMoves || !isIos7 || _statusImage.Superview != null)
@@ -165,9 +179,6 @@ namespace SidebarNavigation
 			UIApplication.SharedApplication.StatusBarHidden = true;
 		}
 
-		/// <summary>
-		/// Gets a static image of the status bar.
-		/// </summary>
 		private UIImage CaptureStatusBarImage()
 		{
 			var frame = UIApplication.SharedApplication.StatusBarFrame;
@@ -177,17 +188,6 @@ namespace SidebarNavigation
 			image = image.WithImageInRect(frame);
 			var newImage = new UIImage(image).Scale(UIApplication.SharedApplication.StatusBarFrame.Size, 2f);
 			return newImage;
-		}
-
-		/// <summary>
-		/// Hides the static status bar image.
-		/// </summary>
-		public void HideStatusBarImage(bool isIos7)
-		{
-			if (!isIos7)
-				return;
-			_statusImage.RemoveFromSuperview();
-			UIApplication.SharedApplication.StatusBarHidden = false;
 		}
 	}
 }
