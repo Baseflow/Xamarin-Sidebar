@@ -80,66 +80,101 @@ namespace SidebarNavigation
 				ContentViewController.View.Subviews[0].UserInteractionEnabled = true;
 			ContentViewController.View.RemoveGestureRecognizer(tapGesture);
 		}
-
+			
 		public void Pan(Sidebar sidebar)
 		{
 			if (sidebar.PanGesture.State == UIGestureRecognizerState.Began) {
-				_panOriginX = ContentViewController.View.Frame.X;
-				if (sidebar.MenuLocation == MenuLocations.Left)
-					_ignorePan = sidebar.PanGesture.LocationInView(ContentViewController.View).X > sidebar.GestureActiveArea;
-				else
-					_ignorePan = sidebar.PanGesture.LocationInView(ContentViewController.View).X < ContentViewController.View.Bounds.Width - sidebar.GestureActiveArea;
+				PanBegan(sidebar.PanGesture, sidebar.MenuLocation, sidebar.GestureActiveArea);
 			} else if (!_ignorePan && (sidebar.PanGesture.State == UIGestureRecognizerState.Changed)) {
-				var t = sidebar.PanGesture.TranslationInView(ContentViewController.View).X;
-				if (sidebar.MenuLocation == MenuLocations.Left) {
-					if ((t > 0 && !sidebar.IsOpen) || (t < 0 && sidebar.IsOpen)) {
-						if (t > sidebar.MenuWidth)
-							t = sidebar.MenuWidth;
-						else if (t < -sidebar.MenuWidth && sidebar.IsOpen)
-							t = sidebar.MenuWidth; 
-						if (_panOriginX + t <= sidebar.MenuWidth)
-							ContentViewController.View.Frame = new RectangleF(_panOriginX + t, ContentViewController.View.Frame.Y, ContentViewController.View.Frame.Width, ContentViewController.View.Frame.Height);
-						ShowShadowWhileDragging(sidebar.HasShadowing, sidebar.MenuLocation);
-					}
-				} else if (sidebar.MenuLocation == MenuLocations.Right) {
-					if ((t < 0 && !sidebar.IsOpen) || (t > 0 && sidebar.IsOpen)) {
-						if (t < -sidebar.MenuWidth)
-							t = -sidebar.MenuWidth;
-						else if (t > sidebar.MenuWidth)
-							t = sidebar.MenuWidth; 
-						if (_panOriginX + t <= 0)
-							ContentViewController.View.Frame = new RectangleF(_panOriginX + t, ContentViewController.View.Frame.Y, ContentViewController.View.Frame.Width, ContentViewController.View.Frame.Height);
-						ShowShadowWhileDragging(sidebar.HasShadowing, sidebar.MenuLocation);
-					}
-				}
-			} else if (!_ignorePan && (sidebar.PanGesture.State == UIGestureRecognizerState.Ended || sidebar.PanGesture.State == UIGestureRecognizerState.Cancelled)) {
-				var t = sidebar.PanGesture.TranslationInView(ContentViewController.View).X;
-				var velocity = sidebar.PanGesture.VelocityInView(ContentViewController.View).X;
-				if ((sidebar.MenuLocation == MenuLocations.Left && sidebar.IsOpen && t < 0) || (sidebar.MenuLocation == MenuLocations.Right && sidebar.IsOpen && t > 0)) {
-					if (ContentViewController.View.Frame.X > -ContentViewController.View.Frame.Width / 2) {
-						sidebar.CloseMenu();
-					} else {
-						UIView.Animate(Sidebar.SlideSpeed, 0, UIViewAnimationOptions.CurveEaseInOut,
-							() => {
-								ContentViewController.View.Frame = new RectangleF(-sidebar.MenuWidth, ContentViewController.View.Frame.Y, ContentViewController.View.Frame.Width, ContentViewController.View.Frame.Height);
-							}, () => {
-							});
-					}
-				} if ((sidebar.MenuLocation == MenuLocations.Left && (velocity > sidebar.FlingVelocity || ContentViewController.View.Frame.X > (sidebar.MenuWidth * sidebar.FlingPercentage)))
-					|| (sidebar.MenuLocation == MenuLocations.Right && (velocity < -sidebar.FlingVelocity || ContentViewController.View.Frame.X < -(sidebar.MenuWidth * sidebar.FlingPercentage)))) {
-					sidebar.OpenMenu();
-				} else {
-					UIView.Animate(Sidebar.SlideSpeed, 0, UIViewAnimationOptions.CurveEaseInOut,
-						() =>
-						{
-							ContentViewController.View.Frame = new RectangleF(0, 0, ContentViewController.View.Frame.Width, ContentViewController.View.Frame.Height);
-						}, () =>
-						{
-						});
-				}
+				PanChanged(sidebar);
+			} else if (!_ignorePan && (sidebar.PanGesture.State == UIGestureRecognizerState.Ended || 
+									   sidebar.PanGesture.State == UIGestureRecognizerState.Cancelled)) {
+				PanEnded(sidebar);
 			}
 		}
 
+
+		private void PanBegan(UIPanGestureRecognizer panGesture, MenuLocations menuLocation, nfloat gestureActiveArea) {
+			_panOriginX = ContentViewController.View.Frame.X;
+			_ignorePan = PanGestureInActiveArea(panGesture, menuLocation, gestureActiveArea);
+		}
+
+		private bool PanGestureInActiveArea(UIPanGestureRecognizer panGesture, MenuLocations menuLocation, nfloat gestureActiveArea) {
+			var position = panGesture.LocationInView(ContentViewController.View).X;
+			if (menuLocation == MenuLocations.Left)
+				return position > gestureActiveArea;
+			else
+				return position < ContentViewController.View.Bounds.Width - gestureActiveArea;
+		}
+
+		private void PanChanged(Sidebar sidebar) {
+			var xDelta = sidebar.PanGesture.TranslationInView(ContentViewController.View).X;
+			if (sidebar.MenuLocation == MenuLocations.Left) {
+				PanChangedMenuLeft(sidebar.MenuWidth, sidebar.IsOpen, xDelta);
+			} else if (sidebar.MenuLocation == MenuLocations.Right) {
+				PanChangedMenuRight(sidebar.MenuWidth, sidebar.IsOpen, xDelta);
+			}
+			ShowShadowWhileDragging(sidebar.HasShadowing, sidebar.MenuLocation);
+		}
+
+		private void PanChangedMenuLeft(int menuWidth, bool isOpen, nfloat xDelta) {
+			if ((xDelta > 0 && !isOpen) || (xDelta < 0 && isOpen)) {
+				if (xDelta > menuWidth)
+					xDelta = menuWidth;
+				else if (xDelta < -menuWidth && isOpen)
+					xDelta = menuWidth; 
+				if (_panOriginX + xDelta <= menuWidth)
+					ContentViewController.View.Frame = 
+						new RectangleF(_panOriginX + xDelta, ContentViewController.View.Frame.Y, ContentViewController.View.Frame.Width, ContentViewController.View.Frame.Height);
+			}
+		}
+
+		private void PanChangedMenuRight(int menuWidth, bool isOpen, nfloat xDelta) {
+			if ((xDelta < 0 && !isOpen) || (xDelta > 0 && isOpen)) {
+				if (xDelta < -menuWidth)
+					xDelta = -menuWidth;
+				else if (xDelta > menuWidth)
+					xDelta = menuWidth; 
+				if (_panOriginX + xDelta <= 0) 
+					ContentViewController.View.Frame = 
+						new RectangleF(_panOriginX + xDelta, ContentViewController.View.Frame.Y, ContentViewController.View.Frame.Width, ContentViewController.View.Frame.Height);
+			}
+		}
+
+		private void PanEnded(Sidebar sidebar) {
+			var xDelta = sidebar.PanGesture.TranslationInView(ContentViewController.View).X;
+			var velocity = sidebar.PanGesture.VelocityInView(ContentViewController.View).X;
+			if ((sidebar.MenuLocation == MenuLocations.Left && sidebar.IsOpen && xDelta < 0) || 
+				(sidebar.MenuLocation == MenuLocations.Right && sidebar.IsOpen && xDelta > 0)) 
+			{
+				PanEndedTowardClose(sidebar);
+			} 
+			var flungOpenFromLeft = (sidebar.MenuLocation == MenuLocations.Left && (velocity > sidebar.FlingVelocity || ContentViewController.View.Frame.X > (sidebar.MenuWidth * sidebar.FlingPercentage)));
+			var flungOpenFromRight = (sidebar.MenuLocation == MenuLocations.Right && (velocity < -sidebar.FlingVelocity || ContentViewController.View.Frame.X < -(sidebar.MenuWidth * sidebar.FlingPercentage)));
+			if (flungOpenFromLeft || flungOpenFromRight) {
+				sidebar.OpenMenu();
+			} else {
+				UIView.Animate(
+					Sidebar.SlideSpeed, 
+					0, 
+					UIViewAnimationOptions.CurveEaseInOut,
+					() => { ContentViewController.View.Frame = new RectangleF(0, 0, ContentViewController.View.Frame.Width, ContentViewController.View.Frame.Height); },
+					() => {});
+			}
+		}
+
+		private void PanEndedTowardClose(Sidebar sidebar) {
+			if (ContentViewController.View.Frame.X > -ContentViewController.View.Frame.Width / 2) {
+				sidebar.CloseMenu();
+			} else {
+				UIView.Animate(
+					Sidebar.SlideSpeed, 
+					0, 
+					UIViewAnimationOptions.CurveEaseInOut,
+					() => { CloseAnimation(); }, 
+					() => { });
+			}
+		}
 
 		private void ShowShadowWhileDragging(bool hasShadowing, MenuLocations menuLocation)
 		{
