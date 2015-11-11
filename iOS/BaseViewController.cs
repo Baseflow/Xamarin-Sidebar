@@ -28,13 +28,15 @@ namespace XamarinFormsSample.iOS
 		{
 			base.ViewWillAppear(animated);
 
-			var navigationItem = this.NavigationController.TopViewController.NavigationItem;
-			navigationItem.SetRightBarButtonItem(
-				new UIBarButtonItem(UIImage.FromBundle("threelines")
-					, UIBarButtonItemStyle.Plain
-					, (sender,args) => {
-						SidebarController.ToggleMenu();
-					}), true);
+			if (this.NavigationController != null) {
+				var navigationItem = this.NavigationController.TopViewController.NavigationItem;
+				navigationItem.SetRightBarButtonItem(
+					new UIBarButtonItem(UIImage.FromBundle("threelines")
+						, UIBarButtonItemStyle.Plain
+						, (sender,args) => {
+							SidebarController.ToggleMenu();
+						}), true);
+			}
 		}
 	}
 }

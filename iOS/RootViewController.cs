@@ -14,16 +14,10 @@ namespace XamarinFormsSample.iOS
 		// the navigation controller
 		public NavController NavController { get; private set; }
 
-		public RootViewController() //: base(null, null)
-		{
-			
-		}
 
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
-
-			var _introController = new IntroController();
 
 			// create a slideout navigation controller with the top navigation controller and the menu view controller
 			NavController = new NavController();

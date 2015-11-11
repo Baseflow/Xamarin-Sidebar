@@ -107,7 +107,6 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
-    <Compile Include="PhoneDialer.cs" />
     <Compile Include="RootViewController.cs" />
     <Compile Include="NavController.cs" />
     <Compile Include="IntroController.cs" />

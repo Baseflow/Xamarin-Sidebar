@@ -1,18 +1,28 @@
 ﻿using System;
 using System.Drawing;
 using UIKit;
+using Xamarin.Forms;
 
-namespace XamarinFormsSample
+namespace XamarinFormsSample.iOS
 {
-	public partial class SideMenuController : UIViewController
+	public class SideMenuController : UIViewController
 	{
-		public SideMenuController() : base(null, null)
-		{
+		// provide access to the sidebar controller to all inheriting controllers
+		protected SidebarNavigation.SidebarController SidebarController { 
+			get {
+				return (UIApplication.SharedApplication.Delegate as AppDelegate).RootViewController.SidebarController;
+			} 
+		}
+
+		// provide access to the sidebar controller to all inheriting controllers
+		protected NavController NavController { 
+			get {
+				return (UIApplication.SharedApplication.Delegate as AppDelegate).RootViewController.NavController;
+			} 
 		}
 
 		public override void ViewDidLoad()
 		{
-			base.ViewDidLoad();
 			View.BackgroundColor = UIColor.FromRGB(.9f, .9f, .9f);
 
 			var title = new UILabel(new RectangleF(0, 50, 230, 20));
@@ -31,16 +41,16 @@ namespace XamarinFormsSample
 			introButton.Frame = new RectangleF(0, 180, 230, 20);
 			introButton.SetTitle("Intro", UIControlState.Normal);
 			introButton.TouchUpInside += (sender, e) => {
-//				NavController.PopToRootViewController(false);
-//				SidebarController.CloseMenu();
+				NavController.PopToRootViewController(false);
+				SidebarController.CloseMenu();
 			};
 
 			var contentButton = new UIButton(UIButtonType.System);
 			contentButton.Frame = new RectangleF(0, 220, 230, 20);
 			contentButton.SetTitle("Content", UIControlState.Normal);
 			contentButton.TouchUpInside += (sender, e) => {
-//				NavController.PushViewController(new ContentController(), false);
-//				SidebarController.CloseMenu();
+				NavController.PushViewController(new MainContentPage().CreateViewController(), false);
+				SidebarController.CloseMenu();
 			};
 
 			View.Add(title);

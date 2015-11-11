@@ -5,9 +5,9 @@ using Xamarin.Forms;
 
 namespace XamarinFormsSample
 {
-	public partial class CallHistoryPage : BasePage
+	public partial class MainContentPage : BasePage
 	{
-		public CallHistoryPage()
+		public MainContentPage()
 		{
 			InitializeComponent();
 		}
