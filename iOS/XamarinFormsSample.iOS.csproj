@@ -112,6 +112,7 @@
     <Compile Include="NavController.cs" />
     <Compile Include="IntroController.cs" />
     <Compile Include="SideMenuController.cs" />
+    <Compile Include="BaseViewController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="ITunesArtwork" />

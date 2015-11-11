@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<BasePage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:local="clr-namespace:XamarinFormsSample;assembly=XamarinFormsSample"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="XamarinFormsSample.CallHistoryPage">
@@ -17,4 +17,4 @@
             <ListView ItemsSource="{x:Static local:App.PhoneNumbers}" />
         </StackLayout>
     </ContentPage.Content>
-</ContentPage>
+</BasePage>

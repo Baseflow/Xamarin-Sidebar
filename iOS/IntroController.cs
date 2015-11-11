@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace XamarinFormsSample.iOS
 {
-	public class IntroController : PageRenderer
+	public class IntroController : BaseViewController
 	{
 		public override void ViewDidLoad()
 		{
@@ -22,13 +22,6 @@ namespace XamarinFormsSample.iOS
 		{
 			base.ViewWillAppear(animated);
 
-			var navigationItem = this.NavigationController.TopViewController.NavigationItem;
-			navigationItem.SetRightBarButtonItem(
-				new UIBarButtonItem(UIImage.FromBundle("threelines")
-					, UIBarButtonItemStyle.Plain
-					, (sender,args) => {
-						//SidebarController.ToggleMenu();
-					}), true);
 		}
 	}
 }

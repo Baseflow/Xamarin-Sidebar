@@ -4,11 +4,11 @@ using Xamarin.Forms;
 
 namespace XamarinFormsSample
 {
-	public partial class IntroPage : ContentPage
+	public partial class IntroPage : BasePage
 	{
 		string translatedNumber;
 
-		public IntroPage ()
+		public IntroPage()
 		{
 			InitializeComponent();
 		}

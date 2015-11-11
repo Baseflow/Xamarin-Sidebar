@@ -16,7 +16,7 @@ namespace XamarinFormsSample.iOS
 
 		public RootViewController() //: base(null, null)
 		{
-			var temp = 1;
+			
 		}
 
 		public override void ViewDidLoad()
