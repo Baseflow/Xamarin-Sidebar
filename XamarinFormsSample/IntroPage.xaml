@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<BasePage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XamarinFormsSample.IntroPage">
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness"
+                    iOS="20, 80, 20, 20"
+                    Android="20, 20, 20, 20"
+                    WinPhone="20, 20, 20, 20" />
+    </ContentPage.Padding>
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="FillAndExpand"
+                     HorizontalOptions="FillAndExpand"
+                     Orientation="Vertical"
+                     Spacing="15">
+            <Label Text="Sidebar Navigation"
+		           XAlign="Center"
+		           FontSize="Large"
+		           FontAttributes="Bold"
+		           TextColor="Blue" />
+		    <Label Text="This is the intro view controller. 
+Click the button in the bar to open the menu to switch controllers.
+
+You can also drag the menu open from the right side of the screen"
+		           XAlign="Center" />
+        </StackLayout>
+    </ContentPage.Content>
+</BasePage>

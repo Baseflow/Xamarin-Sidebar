@@ -42,6 +42,18 @@
     <Compile Include="..\Xamarin-Sidebar\SidebarController.cs">
       <Link>SidebarController.cs</Link>
     </Compile>
+    <Compile Include="..\Xamarin-Sidebar\MenuLocations.cs">
+      <Link>MenuLocations.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin-Sidebar\SidebarMenuArea.cs">
+      <Link>SidebarMenuArea.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin-Sidebar\SidebarContentArea.cs">
+      <Link>SidebarContentArea.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin-Sidebar\Sidebar.cs">
+      <Link>Sidebar.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

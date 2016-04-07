@@ -36,6 +36,10 @@ namespace UnifiedSample
 			
 			// make the window visible
 			window.MakeKeyAndVisible();
+
+			#if DEBUG
+			Xamarin.Calabash.Start();
+			#endif
 			
 			return true;
 		}

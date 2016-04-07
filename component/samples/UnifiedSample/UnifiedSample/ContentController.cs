@@ -21,7 +21,7 @@ namespace Sample
 			title.Font = UIFont.SystemFontOfSize(24.0f);
 			title.TextAlignment = UITextAlignment.Center;
 			title.TextColor = UIColor.Blue;
-			title.Text = "Sidebar Navigation";
+			title.Text = "Content";
 
 			var body = new UILabel(new RectangleF(50, 120, 220, 100));
 			body.Font = UIFont.SystemFontOfSize(12.0f);

@@ -1,6 +1,8 @@
 Sidebar Navigation
 ============================
 
+*If you're using Sidebar Navigation send me a link to your app and I'll happily post it here.*
+
 `Sidebar Navigation` allows you to provide one UIViewController to be used as a content view
 and another to be used as a menu. When you open the menu the content view will slide over
 to reveal the provided menu UIViewController.
