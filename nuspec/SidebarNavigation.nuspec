@@ -8,7 +8,7 @@
         <owners>Jack Dehlin</owners>
         <licenseUrl>https://opensource.org/licenses/Apache-2.0</licenseUrl>
         <projectUrl>https://github.com/jdehlin/Xamarin-Sidebar</projectUrl>
-        <iconUrl>http://components.xamarin.com/resources/icons/component-2082/icon_114x114.png</iconUrl>
+        <iconUrl>https://raw.githubusercontent.com/martijn00/Xamarin-Sidebar/master/icon_sidebarnavigation.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Sidebar navigation for Xamarin.iOS</description>
         <tags>xamarin Xamarin.iOS10 Sidebar iOS Navigation hamburger menu</tags>
