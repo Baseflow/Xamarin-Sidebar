@@ -21,7 +21,7 @@ using nuint = global::System.UInt32;
 
 namespace SidebarNavigation
 {
-	internal class Sidebar
+	public class Sidebar
 	{
 		public const float DefaultFlingPercentage = 0.5f;
 		public const float DefaultFlingVelocity = 800f;

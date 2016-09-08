@@ -256,6 +256,7 @@ namespace SidebarNavigation
 			var menuFrame = MenuAreaController.View.Frame;
 			menuFrame.X = MenuLocation == MenuLocations.Left ? 0 : View.Frame.Width - MenuWidth;
 			menuFrame.Width = MenuWidth;
+            menuFrame.Height = View.Frame.Height;
 			MenuAreaController.View.Frame = menuFrame;
 		}
 

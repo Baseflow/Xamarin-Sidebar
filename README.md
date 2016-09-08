@@ -22,7 +22,7 @@ content and menu controllers.
 
 `RootViewController.cs`
 ```csharp
-using XamarinSidebar;
+using SidebarNavigation;
 ...
 public partial class RootViewController : UIViewController
 {
