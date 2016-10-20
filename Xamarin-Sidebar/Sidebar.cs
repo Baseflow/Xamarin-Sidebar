@@ -34,6 +34,7 @@ namespace SidebarNavigation
 
 		private bool _isOpen = false;
 		private bool _disabled = false;
+		private bool _disablePanGesture = false;
 		private bool _shadowShown = false;
 
 		private SidebarContentArea _sidebarContentArea;
@@ -80,6 +81,22 @@ namespace SidebarNavigation
 		public MenuLocations MenuLocation { get; set; }
 
 		public UITapGestureRecognizer TapGesture { get; private set; }
+
+		public bool DisablePanGesture
+		{
+			get {
+				return _disablePanGesture;
+			} 
+			set
+			{
+				_disablePanGesture = value;
+				if (_disablePanGesture) {
+					PanGesture.Enabled = false;
+				} else {
+					PanGesture.Enabled = true;
+				}
+			}
+		}
 
 		public UIPanGestureRecognizer PanGesture { get; private set; }
 

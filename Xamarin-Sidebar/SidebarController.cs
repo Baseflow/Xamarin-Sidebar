@@ -148,6 +148,15 @@ namespace SidebarNavigation
 		}
 
 		/// <summary>
+		/// Gets or sets a value indicating whether the pan gesture is disabled.
+		/// </summary>
+		public bool DisablePanGesture
+		{
+			get { return _sidebar.DisablePanGesture; }
+			set { _sidebar.DisablePanGesture = value; }
+		}
+
+		/// <summary>
 		/// Gets the current state of the menu.
 		/// Setting this property will open/close the menu respectively.
 		/// </summary>
