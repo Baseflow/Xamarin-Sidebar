@@ -25,13 +25,15 @@ namespace SidebarNavigation
 	{
 		private bool _ignorePan;
 		private nfloat _panOriginX;
-
+		private UIView _viewOverlay;
 
 		public UIViewController ContentViewController { get; set; }
 
 
 		public SidebarContentArea(UIViewController viewController) {
 			ContentViewController = viewController;
+
+			InitializeDarkOverlay();
 		}
 
 
@@ -48,6 +50,30 @@ namespace SidebarNavigation
 			ContentViewController.View.Layer.ShadowRadius = 0.0f;
 			ContentViewController.View.Layer.ShadowOpacity = 0.0f;
 			ContentViewController.View.Layer.ShadowColor = UIColor.Clear.CGColor;
+		}
+
+		public void ShowDarkOverlay(float darkOverlayAlpha) 
+		{
+			_viewOverlay.Alpha = darkOverlayAlpha;
+		}
+
+		private void InitializeDarkOverlay()
+		{
+			if(_viewOverlay != null) 
+				return;
+
+			_viewOverlay = new UIView { BackgroundColor = UIColor.Black};
+			_viewOverlay.Alpha = 0f;
+			_viewOverlay.Frame = ContentViewController.View.Bounds;
+			_viewOverlay.AutoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight;
+
+			ContentViewController.View.AddSubview(_viewOverlay);
+			ContentViewController.View.BringSubviewToFront(_viewOverlay);
+		}
+
+		public void HideDarkOverlay() 
+		{
+			_viewOverlay.Alpha = 0f;
 		}
 
 		public void BeforeOpenAnimation() {
@@ -158,7 +184,7 @@ namespace SidebarNavigation
 					Sidebar.SlideSpeed, 
 					0, 
 					UIViewAnimationOptions.CurveEaseInOut,
-					() => { ContentViewController.View.Frame = new RectangleF(0, 0, ContentViewController.View.Frame.Width, ContentViewController.View.Frame.Height); },
+					() => { ContentViewController.View.Frame = new RectangleF(0, 0, ContentViewController.View.Frame.Width, ContentViewController.View.Frame.Height); HideDarkOverlay(); },
 					() => {});
 			}
 		}
@@ -171,7 +197,7 @@ namespace SidebarNavigation
 					Sidebar.SlideSpeed, 
 					0, 
 					UIViewAnimationOptions.CurveEaseInOut,
-					() => { CloseAnimation(); }, 
+					() => { CloseAnimation(); HideDarkOverlay(); }, 
 					() => { });
 			}
 		}
