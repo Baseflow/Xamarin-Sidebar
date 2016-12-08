@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>SidebarNavigation</id>
-        <version>1.9.1</version>
+        <version>1.9.2</version>
         <title>SidebarNavigation</title>
         <authors>Jack Dehlin,Martijn van Dijk</authors>
         <owners>Jack Dehlin</owners>

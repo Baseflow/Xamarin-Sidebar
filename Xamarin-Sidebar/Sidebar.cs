@@ -27,7 +27,7 @@ namespace SidebarNavigation
 		public const float DefaultFlingVelocity = 800f;
 		public const int DefaultMenuWidth = 260;
 		public const int DefaultGestureActiveArea = 50;
-
+		public const float DefaultDarkOverlayAlpha = 0.54f;
 
 		public static readonly nfloat SlideSpeed = 0.2f;
 
@@ -36,6 +36,7 @@ namespace SidebarNavigation
 		private bool _disabled = false;
 		private bool _disablePanGesture = false;
 		private bool _shadowShown = false;
+		private bool _darkOverlayShown = false;
 
 		private SidebarContentArea _sidebarContentArea;
 		private SidebarMenuArea _sidebarMenuArea;
@@ -108,6 +109,10 @@ namespace SidebarNavigation
 
 		public bool HasShadowing { get; set; }
 
+		public bool HasDarkOverlay { get; set; }
+
+		public float DarkOverlayAlpha { get; set; }
+
 		public bool ReopenOnRotate { get; set; }
 
 		public bool Disabled {
@@ -135,12 +140,13 @@ namespace SidebarNavigation
 			if (IsOpen || Disabled)
 				return;
 			ShowShadow();
+
 			_sidebarContentArea.BeforeOpenAnimation();
 			UIView.Animate(
 				Sidebar.SlideSpeed, 
 				0, 
 				UIViewAnimationOptions.CurveEaseInOut,
-				() => { _sidebarContentArea.OpenAnimation(MenuLocation, MenuWidth); },
+				() => { _sidebarContentArea.OpenAnimation(MenuLocation, MenuWidth); ShowDarkOverlay(); },
 				() => {
 					_sidebarContentArea.AfterOpenAnimation(TapGesture);
 					IsOpen = true;
@@ -156,12 +162,13 @@ namespace SidebarNavigation
 				animate ? Sidebar.SlideSpeed : 0, 
 				0, 
 				UIViewAnimationOptions.CurveEaseInOut, 
-				() => { _sidebarContentArea.CloseAnimation(); }, 
+				() => { _sidebarContentArea.CloseAnimation(); HideDarkOverlay();}, 
 				() => {
 					_sidebarContentArea.AfterCloseAnimation(TapGesture);
 					IsOpen = false;
 				});
 			HideShadow();
+
 		}
 
 		public void ChangeContentView(UIViewController newContentView) {
@@ -217,6 +224,22 @@ namespace SidebarNavigation
 			_shadowShown = false;
 		}
 
+		private void ShowDarkOverlay()
+		{
+			if(!HasDarkOverlay || _darkOverlayShown)
+				return;
+			_sidebarContentArea.ShowDarkOverlay(DarkOverlayAlpha);
+			_darkOverlayShown = true;
+		}
+
+		private void HideDarkOverlay()
+		{
+			if(!HasDarkOverlay  || !_darkOverlayShown)
+				return;
+			_sidebarContentArea.HideDarkOverlay();
+			_darkOverlayShown = false;
+		}
+
 		private void SetDefaults() {
 			FlingPercentage = Sidebar.DefaultFlingPercentage;
 			FlingVelocity = Sidebar.DefaultFlingVelocity;
@@ -225,6 +248,8 @@ namespace SidebarNavigation
 			MenuWidth = Sidebar.DefaultMenuWidth;
 			HasShadowing = true;
 			ReopenOnRotate = true;
+			HasDarkOverlay = false;
+			DarkOverlayAlpha = DefaultDarkOverlayAlpha;
 		}
 
 		private void SetupGestureRecognizers() {

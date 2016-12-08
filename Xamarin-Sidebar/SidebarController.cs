@@ -113,7 +113,23 @@ namespace SidebarNavigation
 		public bool HasShadowing {
 			get { return _sidebar.HasShadowing; }
 			set { _sidebar.HasShadowing = value; }
-		}
+		} 
+
+		/// <summary>
+		/// Gets or sets a value indicating whether there should be a dark overlay effect on the content view.
+		/// </summary>
+		public bool HasDarkOverlay {
+			get { return _sidebar.HasDarkOverlay; }
+			set { _sidebar.HasDarkOverlay = value; }
+		} 
+
+		/// <summary>
+		/// Gets or sets a value indicating the dark overlay alpha.
+		/// </summary>
+		public float DarkOverlayAlpha {
+			get { return _sidebar.DarkOverlayAlpha; }
+			set { _sidebar.DarkOverlayAlpha = value; }
+		} 
 
 		/// <summary>
 		/// Determines if the menu should be reopened after the screen is roated.
