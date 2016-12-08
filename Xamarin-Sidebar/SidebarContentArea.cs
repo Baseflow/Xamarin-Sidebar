@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 
 #if __UNIFIED__
 using UIKit;
@@ -54,6 +55,9 @@ namespace SidebarNavigation
 
 		public void ShowDarkOverlay(float darkOverlayAlpha) 
 		{
+			if(!ContentViewController.View.Subviews.Contains(_viewOverlay))
+				ContentViewController.View.AddSubview(_viewOverlay);
+			
 			_viewOverlay.Alpha = darkOverlayAlpha;
 		}
 
