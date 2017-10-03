@@ -115,6 +115,32 @@ namespace SidebarNavigation
 			set { _sidebar.HasShadowing = value; }
 		} 
 
+        /// <summary>
+        /// Gets or sets the shadow opacity.
+        /// </summary>
+        public float ShadowOpacity {
+            get { return _sidebar.ShadowOpacity; }
+            set { _sidebar.ShadowOpacity = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the color of the shadow.
+        /// </summary>
+        public UIColor ShadowColor {
+            get { return _sidebar.ShadowColor; }
+            set { _sidebar.ShadowColor = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the shadow radius.
+        /// </summary>
+        /// <value>The shadow radius.</value>
+		public float ShadowRadius
+		{
+			get { return _sidebar.ShadowRadius; }
+			set { _sidebar.ShadowRadius = value; }
+		}
+
 		/// <summary>
 		/// Gets or sets a value indicating whether there should be a dark overlay effect on the content view.
 		/// </summary>
