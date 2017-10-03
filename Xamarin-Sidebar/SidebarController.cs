@@ -83,7 +83,7 @@ namespace SidebarNavigation
 		public UIViewController MenuAreaController { get { return _sidebar.MenuViewController; } }
 
 
-        /// <summary>
+		/// <summary>
 		/// Determines the percent of width to complete slide action.
 		/// </summary>
 		public float FlingPercentage {
@@ -91,7 +91,7 @@ namespace SidebarNavigation
 			set { _sidebar.FlingPercentage = value; }
 		}
 			
-        /// <summary>
+		/// <summary>
 		/// Determines the minimum velocity considered a "fling" to complete slide action.
 		/// </summary>
 		public float FlingVelocity {
@@ -115,26 +115,26 @@ namespace SidebarNavigation
 			set { _sidebar.HasShadowing = value; }
 		} 
 
-        /// <summary>
-        /// Gets or sets the shadow opacity.
-        /// </summary>
-        public float ShadowOpacity {
-            get { return _sidebar.ShadowOpacity; }
-            set { _sidebar.ShadowOpacity = value; }
-        }
+		/// <summary>
+		/// Gets or sets the shadow opacity.
+		/// </summary>
+		public float ShadowOpacity {
+			get { return _sidebar.ShadowOpacity; }
+			set { _sidebar.ShadowOpacity = value; }
+		}
 
-        /// <summary>
-        /// Gets or sets the color of the shadow.
-        /// </summary>
-        public UIColor ShadowColor {
-            get { return _sidebar.ShadowColor; }
-            set { _sidebar.ShadowColor = value; }
-        }
+		/// <summary>
+		/// Gets or sets the color of the shadow.
+		/// </summary>
+		public UIColor ShadowColor {
+			get { return _sidebar.ShadowColor; }
+			set { _sidebar.ShadowColor = value; }
+		}
 
-        /// <summary>
-        /// Gets or sets the shadow radius.
-        /// </summary>
-        /// <value>The shadow radius.</value>
+		/// <summary>
+		/// Gets or sets the shadow radius.
+		/// </summary>
+		/// <value>The shadow radius.</value>
 		public float ShadowRadius
 		{
 			get { return _sidebar.ShadowRadius; }
@@ -307,7 +307,7 @@ namespace SidebarNavigation
 			var menuFrame = MenuAreaController.View.Frame;
 			menuFrame.X = MenuLocation == MenuLocations.Left ? 0 : View.Frame.Width - MenuWidth;
 			menuFrame.Width = MenuWidth;
-            menuFrame.Height = View.Frame.Height;
+			menuFrame.Height = View.Frame.Height;
 			MenuAreaController.View.Frame = menuFrame;
 		}
 

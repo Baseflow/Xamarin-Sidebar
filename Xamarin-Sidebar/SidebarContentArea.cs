@@ -31,11 +31,11 @@ namespace SidebarNavigation
 		public UIViewController ContentViewController { get; set; }
 
 
-        public float ShadowRadius { get; set; } = 4.0f;
+		public float ShadowRadius { get; set; } = 4.0f;
 
-        public float ShadowOpacity { get; set; } = 0.2f;
+		public float ShadowOpacity { get; set; } = 0.2f;
 
-        public UIColor ShadowColor { get; set; } = UIColor.Green;
+		public UIColor ShadowColor { get; set; } = UIColor.Green;
 
 
 		public SidebarContentArea(UIViewController viewController) {
@@ -48,9 +48,9 @@ namespace SidebarNavigation
 		public void DisplayShadow(float position) {
 			ContentViewController.View.Layer.ShadowOffset = new SizeF(position, 0);
 			ContentViewController.View.Layer.ShadowPath = UIBezierPath.FromRect(ContentViewController.View.Bounds).CGPath;
-            ContentViewController.View.Layer.ShadowRadius = ShadowRadius;
-            ContentViewController.View.Layer.ShadowOpacity = ShadowOpacity;
-            ContentViewController.View.Layer.ShadowColor = ShadowColor.CGColor;
+			ContentViewController.View.Layer.ShadowRadius = ShadowRadius;
+			ContentViewController.View.Layer.ShadowOpacity = ShadowOpacity;
+			ContentViewController.View.Layer.ShadowColor = ShadowColor.CGColor;
 		}
 
 		public void HideShadow() {
@@ -220,9 +220,9 @@ namespace SidebarNavigation
 			var xOffset = (menuLocation == MenuLocations.Left) ? -5 : 5;
 			ContentViewController.View.Layer.ShadowOffset = new SizeF(xOffset, 0);
 			ContentViewController.View.Layer.ShadowPath = UIBezierPath.FromRect (ContentViewController.View.Bounds).CGPath;
-            ContentViewController.View.Layer.ShadowRadius = ShadowRadius;
-            ContentViewController.View.Layer.ShadowOpacity = ShadowOpacity;
-            ContentViewController.View.Layer.ShadowColor = ShadowColor.CGColor;
+			ContentViewController.View.Layer.ShadowRadius = ShadowRadius;
+			ContentViewController.View.Layer.ShadowOpacity = ShadowOpacity;
+			ContentViewController.View.Layer.ShadowColor = ShadowColor.CGColor;
 		}
 	}
 }
