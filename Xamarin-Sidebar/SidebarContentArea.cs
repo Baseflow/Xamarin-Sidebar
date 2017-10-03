@@ -33,9 +33,9 @@ namespace SidebarNavigation
 
 		public float ShadowRadius { get; set; } = 4.0f;
 
-		public float ShadowOpacity { get; set; } = 0.2f;
+		public float ShadowOpacity { get; set; } = 0.5f;
 
-		public UIColor ShadowColor { get; set; } = UIColor.Green;
+		public UIColor ShadowColor { get; set; } = UIColor.Black;
 
 
 		public SidebarContentArea(UIViewController viewController) {
