@@ -107,6 +107,21 @@ namespace SidebarNavigation
 
 		public float GestureActiveArea { get; set; }
 
+		public float ShadowOpacity {
+			get { return _sidebarContentArea.ShadowOpacity; }
+			set { _sidebarContentArea.ShadowOpacity = value; }
+		}
+
+		public float ShadowRadius {
+			get { return _sidebarContentArea.ShadowRadius; }
+			set { _sidebarContentArea.ShadowRadius = value; }
+		}
+
+		public UIColor ShadowColor {
+			get { return _sidebarContentArea.ShadowColor; }
+			set { _sidebarContentArea.ShadowColor = value; }
+		}
+
 		public bool HasShadowing { get; set; }
 
 		public bool HasDarkOverlay { get; set; }
