@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>SidebarNavigation</id>
-        <version>1.9.3</version>
+        <version>1.9.4</version>
         <title>SidebarNavigation</title>
         <authors>Jack Dehlin,Martijn van Dijk</authors>
         <owners>Jack Dehlin</owners>
@@ -15,11 +15,6 @@
     </metadata>
     <files>
         <file src="..\Xamarin-Sidebar-Unified\bin\Release\Xamarin-Sidebar-Unified.dll" target="lib\Xamarin.iOS10\Xamarin-Sidebar-Unified.dll" />
-        <file src="..\Xamarin-Sidebar-Unified\bin\Release\Xamarin-Sidebar-Unified.dll.mdb" target="lib\Xamarin.iOS10\Xamarin-Sidebar-Unified.dll.mdb" />
-        <file src="..\Xamarin-Sidebar\MenuLocations.cs" target="src\Xamarin-Sidebar\MenuLocations.cs" />
-        <file src="..\Xamarin-Sidebar\Sidebar.cs" target="src\Xamarin-Sidebar\Sidebar.cs" />
-        <file src="..\Xamarin-Sidebar\SidebarContentArea.cs" target="src\Xamarin-Sidebar\SidebarContentArea.cs" />
-        <file src="..\Xamarin-Sidebar\SidebarController.cs" target="src\Xamarin-Sidebar\SidebarController.cs" />
-        <file src="..\Xamarin-Sidebar\SidebarMenuArea.cs" target="src\Xamarin-Sidebar\SidebarMenuArea.cs" />
+        <file src="..\Xamarin-Sidebar-Unified\bin\Release\Xamarin-Sidebar-Unified.pdb" target="lib\Xamarin.iOS10\Xamarin-Sidebar-Unified.pdb" />
     </files>
 </package>
