@@ -272,7 +272,7 @@ namespace SidebarNavigation
 			TapGesture.AddTarget (() => CloseMenu());
 			TapGesture.NumberOfTapsRequired = 1;
 			PanGesture = new UIPanGestureRecognizer {
-				Delegate = new SlideoutPanDelegate(),
+				Delegate = new SlideoutPanDelegate(this),
 				MaximumNumberOfTouches = 1,
 				MinimumNumberOfTouches = 1
 			};
@@ -280,11 +280,22 @@ namespace SidebarNavigation
 		}
 
 
+		/// <summary>
+		/// Default pan gesture delegate used to start menu sliding
+		/// when appropriate.
+		/// </summary>
 		private class SlideoutPanDelegate : UIGestureRecognizerDelegate
 		{
-			public override bool ShouldReceiveTouch (UIGestureRecognizer recognizer, UITouch touch)
+			private readonly Sidebar _sidebar;
+
+			public SlideoutPanDelegate(Sidebar sidebar)
 			{
-				return true;
+				_sidebar = sidebar;
+			}
+			
+			public override bool ShouldReceiveTouch(UIGestureRecognizer recognizer, UITouch touch)
+			{
+				return _sidebar._sidebarContentArea.TouchInActiveArea(touch, _sidebar);
 			}
 		}
 	}

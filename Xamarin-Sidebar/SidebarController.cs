@@ -23,7 +23,7 @@ namespace SidebarNavigation
 {
 	public class SidebarController : UIViewController {
 
-		private Sidebar _sidebar;
+		private readonly Sidebar _sidebar;
 
 
 		/// <summary>
@@ -42,7 +42,7 @@ namespace SidebarNavigation
 		/// <param name="contentViewController">
 		/// The view controller for the content area.
 		/// </param>
-		/// <param name="navigationViewController">
+		/// <param name="menuViewController">
 		/// The view controller for the side menu.
 		/// </param>
 		public SidebarController(
@@ -70,7 +70,6 @@ namespace SidebarNavigation
 		/// </summary>
 		public event EventHandler<bool> StateChangeHandler;
 
-
 		/// <summary>
 		/// The view controller shown in the content area.
 		/// </summary>
@@ -82,7 +81,11 @@ namespace SidebarNavigation
 		/// </summary>
 		public UIViewController MenuAreaController { get { return _sidebar.MenuViewController; } }
 
-
+		/// <summary>
+		/// Exposes the underlying sidebar object
+		/// </summary>
+		public Sidebar Sidebar => _sidebar;
+		
 		/// <summary>
 		/// Determines the percent of width to complete slide action.
 		/// </summary>
