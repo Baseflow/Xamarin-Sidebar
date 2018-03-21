@@ -1,23 +1,11 @@
 ﻿using System;
 using System.Drawing;
-
-#if __UNIFIED__
 using UIKit;
 using Foundation;
 using CoreGraphics;
-
 using RectangleF = CoreGraphics.CGRect;
 using SizeF = CoreGraphics.CGSize;
 using PointF = CoreGraphics.CGPoint;
-#else
-using MonoTouch.UIKit;
-using MonoTouch.Foundation;
-using MonoTouch.CoreGraphics;
-
-using nfloat = global::System.Single;
-using nint = global::System.Int32;
-using nuint = global::System.UInt32;
-#endif
 
 namespace SidebarNavigation
 {
@@ -31,7 +19,6 @@ namespace SidebarNavigation
 
 		public static readonly nfloat SlideSpeed = 0.2f;
 
-
 		private bool _isOpen = false;
 		private bool _disabled = false;
 		private bool _disablePanGesture = false;
@@ -40,7 +27,6 @@ namespace SidebarNavigation
 
 		private SidebarContentArea _sidebarContentArea;
 		private SidebarMenuArea _sidebarMenuArea;
-
 
 		public Sidebar(
 			UIViewController rootViewController,
@@ -53,7 +39,6 @@ namespace SidebarNavigation
 			SetDefaults();
 			SetupGestureRecognizers();
 		}
-
 
 		public UIViewController ContentViewController { 
 			get { return _sidebarContentArea.ContentViewController; } 
@@ -146,11 +131,9 @@ namespace SidebarNavigation
 			}
 		}
 
-
 		public event EventHandler<bool> StateChangeHandler;
 
-
-		public void OpenMenu()
+		public virtual void OpenMenu()
 		{
 			if (IsOpen || Disabled)
 				return;
@@ -168,7 +151,7 @@ namespace SidebarNavigation
 				});
 		}
 
-		public void CloseMenu(bool animate = true)
+        public virtual void CloseMenu(bool animate = true)
 		{
 			if (!IsOpen || Disabled)
 				return;
@@ -186,23 +169,22 @@ namespace SidebarNavigation
 
 		}
 
-		public void ChangeContentView(UIViewController newContentView) {
+        public virtual void ChangeContentView(UIViewController newContentView) {
 			RemoveContentView();
 			ContentViewController = newContentView;
 			ContentViewController.View.AddGestureRecognizer(PanGesture);
 		}
 
-		public void ChangeMenuView(UIViewController newMenuView) {
+        public virtual void ChangeMenuView(UIViewController newMenuView) {
 			RemoveMenuView();
 			MenuViewController = newMenuView;
 		}
 
-		public void Pan() {
+        public virtual void Pan() {
 			_sidebarContentArea.Pan(this);
 		}
-			
 
-		private void RemoveContentView() {
+        private void RemoveContentView() {
 			if (ContentViewController.View != null)
 			{
 				ContentViewController.View.RemoveFromSuperview();
@@ -279,14 +261,13 @@ namespace SidebarNavigation
 			PanGesture.AddTarget(() => Pan());
 		}
 
-
 		/// <summary>
 		/// Default pan gesture delegate used to start menu sliding
 		/// when appropriate.
 		/// </summary>
-		private class SlideoutPanDelegate : UIGestureRecognizerDelegate
+        protected class SlideoutPanDelegate : UIGestureRecognizerDelegate
 		{
-			private readonly Sidebar _sidebar;
+            protected readonly Sidebar _sidebar;
 
 			public SlideoutPanDelegate(Sidebar sidebar)
 			{

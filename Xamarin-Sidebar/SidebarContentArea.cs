@@ -1,34 +1,21 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
-
-#if __UNIFIED__
 using UIKit;
 using Foundation;
 using CoreGraphics;
-
 using RectangleF = CoreGraphics.CGRect;
 using SizeF = CoreGraphics.CGSize;
 using PointF = CoreGraphics.CGPoint;
-#else
-using MonoTouch.UIKit;
-using MonoTouch.Foundation;
-using MonoTouch.CoreGraphics;
-
-using nfloat = global::System.Single;
-using nint = global::System.Int32;
-using nuint = global::System.UInt32;
-#endif
 
 namespace SidebarNavigation
 {
 	internal class SidebarContentArea
 	{
-		private nfloat _panOriginX;
-		private UIView _viewOverlay;
+        protected nfloat _panOriginX;
+        protected UIView _viewOverlay;
 
 		public UIViewController ContentViewController { get; set; }
-
 
 		public float ShadowRadius { get; set; } = 4.0f;
 
@@ -36,15 +23,13 @@ namespace SidebarNavigation
 
 		public UIColor ShadowColor { get; set; } = UIColor.Black;
 
-
 		public SidebarContentArea(UIViewController viewController) {
 			ContentViewController = viewController;
 
 			InitializeDarkOverlay();
 		}
 
-
-		public void DisplayShadow(float position) {
+        public virtual void DisplayShadow(float position) {
 			ContentViewController.View.Layer.ShadowOffset = new SizeF(position, 0);
 			ContentViewController.View.Layer.ShadowPath = UIBezierPath.FromRect(ContentViewController.View.Bounds).CGPath;
 			ContentViewController.View.Layer.ShadowRadius = ShadowRadius;
@@ -52,14 +37,14 @@ namespace SidebarNavigation
 			ContentViewController.View.Layer.ShadowColor = ShadowColor.CGColor;
 		}
 
-		public void HideShadow() {
+        public virtual void HideShadow() {
 			ContentViewController.View.Layer.ShadowOffset = new SizeF (0, 0);
 			ContentViewController.View.Layer.ShadowRadius = 0.0f;
 			ContentViewController.View.Layer.ShadowOpacity = 0.0f;
 			ContentViewController.View.Layer.ShadowColor = UIColor.Clear.CGColor;
 		}
 
-		public void ShowDarkOverlay(float darkOverlayAlpha) 
+        public virtual void ShowDarkOverlay(float darkOverlayAlpha) 
 		{
 			if(!ContentViewController.View.Subviews.Contains(_viewOverlay))
 				ContentViewController.View.AddSubview(_viewOverlay);
@@ -67,7 +52,7 @@ namespace SidebarNavigation
 			_viewOverlay.Alpha = darkOverlayAlpha;
 		}
 
-		private void InitializeDarkOverlay()
+        protected virtual void InitializeDarkOverlay()
 		{
 			if(_viewOverlay != null) 
 				return;
@@ -81,16 +66,16 @@ namespace SidebarNavigation
 			ContentViewController.View.BringSubviewToFront(_viewOverlay);
 		}
 
-		public void HideDarkOverlay() 
+        public virtual void HideDarkOverlay() 
 		{
 			_viewOverlay.Alpha = 0f;
 		}
 
-		public void BeforeOpenAnimation() {
+        public virtual void BeforeOpenAnimation() {
 			ContentViewController.View.EndEditing(true);
 		}
 
-		public void OpenAnimation(MenuLocations menuLocation, int menuWidth) {
+        public virtual void OpenAnimation(MenuLocations menuLocation, int menuWidth) {
 			if (menuLocation == MenuLocations.Right){
 				ContentViewController.View.Frame = 
 					new RectangleF (-menuWidth, 0, ContentViewController.View.Frame.Width, ContentViewController.View.Frame.Height);
@@ -100,24 +85,24 @@ namespace SidebarNavigation
 			}
 		}
 
-		public void AfterOpenAnimation(UITapGestureRecognizer tapGesture) {
+        public virtual void AfterOpenAnimation(UITapGestureRecognizer tapGesture) {
 			if (ContentViewController.View.Subviews.Length > 0)
 				ContentViewController.View.Subviews[0].UserInteractionEnabled = false;
 			ContentViewController.View.AddGestureRecognizer(tapGesture);
 		}
 
-		public void CloseAnimation() {
+        public virtual void CloseAnimation() {
 			ContentViewController.View.Frame = 
 				new RectangleF (0, 0, ContentViewController.View.Frame.Width, ContentViewController.View.Frame.Height);
 		}
 
-		public void AfterCloseAnimation(UITapGestureRecognizer tapGesture) {
+        public virtual void AfterCloseAnimation(UITapGestureRecognizer tapGesture) {
 			if (ContentViewController.View.Subviews.Length > 0)
 				ContentViewController.View.Subviews[0].UserInteractionEnabled = true;
 			ContentViewController.View.RemoveGestureRecognizer(tapGesture);
 		}
 			
-		public void Pan(Sidebar sidebar)
+        public virtual void Pan(Sidebar sidebar)
 		{
 			if (sidebar.PanGesture.State == UIGestureRecognizerState.Began) {
 				PanBegan();
@@ -136,7 +121,7 @@ namespace SidebarNavigation
 		/// <param name="touch"></param>
 		/// <param name="sidebar"></param>
 		/// <returns></returns>
-		public bool TouchInActiveArea(UITouch touch, Sidebar sidebar)
+		public virtual bool TouchInActiveArea(UITouch touch, Sidebar sidebar)
 		{
 			var view = ContentViewController.View;
 			var position = touch.LocationInView(view).X;
@@ -147,11 +132,11 @@ namespace SidebarNavigation
 				position > (view.Bounds.Width - area);
 		}
 
-		private void PanBegan() {
+        protected virtual void PanBegan() {
 			_panOriginX = ContentViewController.View.Frame.X;
 		}
 
-		private void PanChanged(Sidebar sidebar) {
+        protected virtual void PanChanged(Sidebar sidebar) {
 			var xDelta = sidebar.PanGesture.TranslationInView(ContentViewController.View).X;
 			if (sidebar.MenuLocation == MenuLocations.Left) {
 				PanChangedMenuLeft(sidebar.MenuWidth, sidebar.IsOpen, xDelta);
@@ -161,7 +146,7 @@ namespace SidebarNavigation
 			ShowShadowWhileDragging(sidebar.HasShadowing, sidebar.MenuLocation);
 		}
 
-		private void PanChangedMenuLeft(int menuWidth, bool isOpen, nfloat xDelta) {
+        protected virtual void PanChangedMenuLeft(int menuWidth, bool isOpen, nfloat xDelta) {
 			if ((xDelta > 0 && !isOpen) || (xDelta < 0 && isOpen)) {
 				if (xDelta > menuWidth)
 					xDelta = menuWidth;
@@ -173,7 +158,7 @@ namespace SidebarNavigation
 			}
 		}
 
-		private void PanChangedMenuRight(int menuWidth, bool isOpen, nfloat xDelta) {
+        protected virtual void PanChangedMenuRight(int menuWidth, bool isOpen, nfloat xDelta) {
 			if ((xDelta < 0 && !isOpen) || (xDelta > 0 && isOpen)) {
 				if (xDelta < -menuWidth)
 					xDelta = -menuWidth;
@@ -185,7 +170,7 @@ namespace SidebarNavigation
 			}
 		}
 
-		private void PanEnded(Sidebar sidebar) {
+        protected virtual void PanEnded(Sidebar sidebar) {
 			var xDelta = sidebar.PanGesture.TranslationInView(ContentViewController.View).X;
 			var velocity = sidebar.PanGesture.VelocityInView(ContentViewController.View).X;
 			if ((sidebar.MenuLocation == MenuLocations.Left && sidebar.IsOpen && xDelta < 0) || 
@@ -207,7 +192,7 @@ namespace SidebarNavigation
 			}
 		}
 
-		private void PanEndedTowardClose(Sidebar sidebar) {
+        protected virtual void PanEndedTowardClose(Sidebar sidebar) {
 			if (ContentViewController.View.Frame.X > -ContentViewController.View.Frame.Width / 2) {
 				sidebar.CloseMenu();
 			} else {
@@ -220,7 +205,7 @@ namespace SidebarNavigation
 			}
 		}
 
-		private void ShowShadowWhileDragging(bool hasShadowing, MenuLocations menuLocation)
+        protected virtual void ShowShadowWhileDragging(bool hasShadowing, MenuLocations menuLocation)
 		{
 			if (!hasShadowing)
 				return;

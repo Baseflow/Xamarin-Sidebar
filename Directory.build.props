@@ -1,0 +1,34 @@
+﻿<Project>
+  <PropertyGroup>
+    <Copyright>Jack Dehlin, Martijn van Dijk</Copyright>
+    <PackageLicenseUrl>https://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/jdehlin/Xamarin-Sidebar</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/jdehlin/Xamarin-Sidebar/master/icon_sidebarnavigation.png</PackageIconUrl>
+    <Authors>Jack Dehlin, Martijn van Dijk</Authors>
+    <Owners>Jack Dehlin;martijn00</Owners>
+    <PackageTags>xamarin Xamarin.iOS10 Sidebar iOS Navigation hamburger menu</PackageTags>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <RepositoryUrl>https://github.com/jdehlin/Xamarin-Sidebar</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Product>$(AssemblyName) ($(TargetFramework))</Product>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Version>2.0.0</Version>
+
+    <LangVersion>latest</LangVersion>
+    <NoWarn>$(NoWarn);1591;1701;1702;1705;VSX1000</NoWarn>
+    <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' and '$(IsTestProject)' != 'true'">true</GeneratePackageOnBuild>
+
+    <Platform>AnyCPU</Platform>
+    <DebugType>full</DebugType>
+    <IsTestProject>$(MSBuildProjectName.Contains('UnitTest'))</IsTestProject>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.2.2" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(IsTestProject)' != 'true' and '$(SourceLinkEnabled)' != 'false' ">
+    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.0" PrivateAssets="All" /> 
+  </ItemGroup>
+</Project>
