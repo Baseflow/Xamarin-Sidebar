@@ -24,7 +24,6 @@ namespace SidebarNavigation
 {
 	internal class SidebarContentArea
 	{
-		private bool _ignorePan;
 		private nfloat _panOriginX;
 		private UIView _viewOverlay;
 
@@ -121,27 +120,35 @@ namespace SidebarNavigation
 		public void Pan(Sidebar sidebar)
 		{
 			if (sidebar.PanGesture.State == UIGestureRecognizerState.Began) {
-				PanBegan(sidebar.PanGesture, sidebar.MenuLocation, sidebar.GestureActiveArea);
-			} else if (!_ignorePan && (sidebar.PanGesture.State == UIGestureRecognizerState.Changed)) {
+				PanBegan();
+			} else if (sidebar.PanGesture.State == UIGestureRecognizerState.Changed) {
 				PanChanged(sidebar);
-			} else if (!_ignorePan && (sidebar.PanGesture.State == UIGestureRecognizerState.Ended || 
-									   sidebar.PanGesture.State == UIGestureRecognizerState.Cancelled)) {
+			} else if (sidebar.PanGesture.State == UIGestureRecognizerState.Ended || 
+			           sidebar.PanGesture.State == UIGestureRecognizerState.Cancelled) {
 				PanEnded(sidebar);
 			}
 		}
 
+		/// <summary>
+		/// Returns whether a certain touch is within the area that should
+		/// activate the pan gesture sliding out the menu.
+		/// </summary>
+		/// <param name="touch"></param>
+		/// <param name="sidebar"></param>
+		/// <returns></returns>
+		public bool TouchInActiveArea(UITouch touch, Sidebar sidebar)
+		{
+			var view = ContentViewController.View;
+			var position = touch.LocationInView(view).X;
+			var area = sidebar.GestureActiveArea;
 
-		private void PanBegan(UIPanGestureRecognizer panGesture, MenuLocations menuLocation, nfloat gestureActiveArea) {
-			_panOriginX = ContentViewController.View.Frame.X;
-			_ignorePan = PanGestureInActiveArea(panGesture, menuLocation, gestureActiveArea);
+			return sidebar.MenuLocation == MenuLocations.Left ? 
+				position < area : 
+				position > (view.Bounds.Width - area);
 		}
 
-		private bool PanGestureInActiveArea(UIPanGestureRecognizer panGesture, MenuLocations menuLocation, nfloat gestureActiveArea) {
-			var position = panGesture.LocationInView(ContentViewController.View).X;
-			if (menuLocation == MenuLocations.Left)
-				return position > gestureActiveArea;
-			else
-				return position < ContentViewController.View.Bounds.Width - gestureActiveArea;
+		private void PanBegan() {
+			_panOriginX = ContentViewController.View.Frame.X;
 		}
 
 		private void PanChanged(Sidebar sidebar) {
