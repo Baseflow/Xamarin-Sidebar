@@ -3,6 +3,12 @@ Xamarin-Sidebar
 
 A slideout navigation control for Xamarin iOS applications.
 
+![license](https://img.shields.io/github/license/jdehlin/Xamarin-Sidebar.svg)
+[![Build status](https://ci.appveyor.com/api/projects/status/lonmgoyb01ikni8q?svg=true)](https://ci.appveyor.com/project/martijn00/xamarin-sidebar)
+[![NuGet](https://img.shields.io/nuget/v/SidebarNavigation.svg)](https://www.nuget.org/packages/SidebarNavigation/)
+[![GitHub tag](https://img.shields.io/github/tag/jdehlin/Xamarin-Sidebar.svg)](https://github.com/jdehlin/Xamarin-Sidebar/releases)
+[![MyGet](https://img.shields.io/myget/martijn00/v/xamarin-sidebar.svg)](https://www.myget.org/F/martijn00/api/v3/index.json)
+
 Get the package on [Nuget](https://www.nuget.org/packages/SidebarNavigation/)!
 
 *If you're using Sidebar Navigation send me a link to your app and I'll happily post it here.*
