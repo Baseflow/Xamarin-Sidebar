@@ -1,13 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27520.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xamarin-Sidebar", "Xamarin-Sidebar\Xamarin-Sidebar.csproj", "{4046DF23-7FA6-4662-938D-FA3FF45DB144}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UITests", "UITests\UITests.csproj", "{3F7150B4-F856-4CBE-BC4E-F398719EE2B2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{3973650E-CBA1-4448-8A10-1B261FABBB4F}"
+	ProjectSection(SolutionItems) = preProject
+		Samples\Directory.build.props = Samples\Directory.build.props
+		Samples\Directory.build.targets = Samples\Directory.build.targets
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{81F00105-D53D-4AEE-AC73-E37DFA764935}"
 	ProjectSection(SolutionItems) = preProject

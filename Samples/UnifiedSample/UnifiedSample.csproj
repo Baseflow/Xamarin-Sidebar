@@ -91,9 +91,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
-    <Reference Include="Calabash">
-      <HintPath>..\..\..\..\packages\Xamarin.TestCloud.Agent.0.13.0\lib\Xamarin.iOS10\Calabash.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json">
@@ -106,7 +103,6 @@
   <ItemGroup>
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -118,17 +114,11 @@
     <Compile Include="SideMenuController.cs" />
     <Compile Include="SubMenuController.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Xamarin-Sidebar-Unified\Xamarin-Sidebar-Unified.csproj">
-      <Project>{72600F4A-51F2-4E93-8688-8198DE0F8EF4}</Project>
-      <Name>Xamarin-Sidebar-Unified</Name>
+    <ProjectReference Include="..\..\Xamarin-Sidebar\Xamarin-Sidebar.csproj">
+      <Project>{4046df23-7fa6-4662-938d-fa3ff45db144}</Project>
+      <Name>Xamarin-Sidebar</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <XamarinComponentReference Include="calabash">
-      <Version>13.0</Version>
-      <Visible>False</Visible>
-    </XamarinComponentReference>
-  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

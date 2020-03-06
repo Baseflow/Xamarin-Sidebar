@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using NUnit.Framework;
 using Xamarin.UITest;
 using Xamarin.UITest.iOS;
 using Xamarin.UITest.Queries;
 using System.Threading;
+using Xunit;
 
 namespace UITests
 {
@@ -114,11 +114,11 @@ namespace UITests
 
 
 		private void AssertMenuOpen() {
-			Assert.AreEqual(310, app.Query(ToggleButton).First().Rect.X);
+			Assert.Equal(310, app.Query(ToggleButton).First().Rect.X);
 		}
 
 		private void AssertMenuClosed() {
-			Assert.AreEqual(50, app.Query(ToggleButton).First().Rect.X);
+			Assert.Equal(50, app.Query(ToggleButton).First().Rect.X);
 		}
 	}
 }

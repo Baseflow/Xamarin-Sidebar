@@ -38,7 +38,7 @@ namespace UnifiedSample
 			window.MakeKeyAndVisible();
 
 			#if DEBUG
-			Xamarin.Calabash.Start();
+			//Xamarin.Calabash.Start();
 			#endif
 			
 			return true;

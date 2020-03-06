@@ -71,9 +71,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
-    <Reference Include="Xamarin-Sidebar-Unified">
-      <HintPath>..\..\..\..\Xamarin-Sidebar-Unified\bin\Release\Xamarin-Sidebar-Unified.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json">
@@ -116,5 +113,11 @@
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <BundleResource Include="Resources\threelines.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Xamarin-Sidebar\Xamarin-Sidebar.csproj">
+      <Project>{4046df23-7fa6-4662-938d-fa3ff45db144}</Project>
+      <Name>Xamarin-Sidebar</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
