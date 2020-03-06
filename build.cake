@@ -1,47 +1,67 @@
-#tool nuget:?package=GitVersion.CommandLine
-#tool nuget:?package=vswhere
-#addin nuget:?package=Cake.Figlet
-#addin nuget:?package=Cake.Incubator&version=1.7.1
-#addin nuget:?package=Cake.Git&version=0.16.1
-#addin nuget:?package=Polly
+#tool nuget:?package=GitVersion.CommandLine&version=5.0.1
+#tool nuget:?package=vswhere&version=2.7.1
+#addin nuget:?package=Cake.Figlet&version=1.3.1
+#addin nuget:?package=Cake.Git&version=0.21.0
+#addin nuget:?package=Polly&version=7.1.1
 
 using Polly;
 
-var sln = new FilePath("./Xamarin-Sidebar.sln");
+var solutionName = "MediaManager";
+var repoName = "martijn00/XamarinMediaManager";
+var sln = new FilePath("./" + solutionName + ".sln");
 var outputDir = new DirectoryPath("./artifacts");
+var gitVersionLog = new FilePath("./artifacts/gitversion.log");
 var nuspecDir = new DirectoryPath("./nuspec");
+var nugetPackagesDir = new DirectoryPath("./nuget/packages");
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 var verbosityArg = Argument("verbosity", "Minimal");
 var verbosity = Verbosity.Minimal;
 
+var signingSecret = EnvironmentVariable("SIGNING_SECRET");
+var signingUser = EnvironmentVariable("SIGNING_USER");
+var didSignPackages = false;
+
+var nugetSource = EnvironmentVariable("NUGET_SOURCE");
+var nugetApiKey = EnvironmentVariable("NUGET_APIKEY");
+
+var githubToken = EnvironmentVariable("GITHUB_TOKEN");
+var githubTokenEnv = EnvironmentVariable("CHANGELOG_GITHUB_TOKEN");
+var sinceTag = Argument("since_tag", "");
+
+var shouldPublishPackages = false;
+
 var isRunningOnAppVeyor = AppVeyor.IsRunningOnAppVeyor;
 GitVersion versionInfo = null;
 
-Setup(context => {
-    versionInfo = context.GitVersion(new GitVersionSettings {
+Setup(context => 
+{
+    versionInfo = context.GitVersion(new GitVersionSettings 
+	{
         UpdateAssemblyInfo = true,
-        OutputType = GitVersionOutput.Json
+        OutputType = GitVersionOutput.Json,
+        LogFilePath = gitVersionLog.MakeAbsolute(context.Environment)
     });
 
     if (isRunningOnAppVeyor)
     {
-        var buildNumber = AppVeyor.Environment.Build.Number;
-        AppVeyor.UpdateBuildVersion(versionInfo.InformationalVersion
-            + "-" + buildNumber);
+		var buildNumber = versionInfo.InformationalVersion + "-" + AppVeyor.Environment.Build.Number;
+        buildNumber = buildNumber.Replace("/", "-");
+        AppVeyor.UpdateBuildVersion(buildNumber);
     }
 
     var cakeVersion = typeof(ICakeContext).Assembly.GetName().Version.ToString();
 
-    Information(Figlet("Xamarin-Sidebar"));
+    Information(Figlet(solutionName));
     Information("Building version {0}, ({1}, {2}) using version {3} of Cake.",
         versionInfo.SemVer,
         configuration,
         target,
         cakeVersion);
+		
+	shouldPublishPackages = ShouldPushNugetPackages(versionInfo.BranchName, nugetSource);
 
-    Debug("Will push NuGet packages {0}", 
-        ShouldPushNugetPackages(versionInfo.BranchName));
+    Information("Will push NuGet packages {0}", shouldPublishPackages);
 
     verbosity = (Verbosity) Enum.Parse(typeof(Verbosity), verbosityArg, true);
 });
@@ -51,6 +71,7 @@ Task("Clean").Does(() =>
     CleanDirectories("./**/bin");
     CleanDirectories("./**/obj");
     CleanDirectories(outputDir.FullPath);
+    CleanDirectories(nugetPackagesDir.FullPath);
 
     EnsureDirectoryExists(outputDir);
 });
@@ -60,10 +81,19 @@ Task("ResolveBuildTools")
     .WithCriteria(() => IsRunningOnWindows())
     .Does(() => 
 {
-    var vsLatest = VSWhereLatest();
+    var vsWhereSettings = new VSWhereLatestSettings
+    {
+        IncludePrerelease = true,
+        Requires = "Component.Xamarin"
+    };
+    
+    var vsLatest = VSWhereLatest(vsWhereSettings);
     msBuildPath = (vsLatest == null)
         ? null
-        : vsLatest.CombineWithFilePath("./MSBuild/15.0/Bin/MSBuild.exe");
+        : vsLatest.CombineWithFilePath("./MSBuild/Current/Bin/MSBuild.exe");
+
+    if (msBuildPath != null)
+        Information("Found MSBuild at {0}", msBuildPath.ToString());
 });
 
 Task("Restore")
@@ -90,13 +120,12 @@ Task("Build")
     .Does(() =>  {
 
     var settings = GetDefaultBuildSettings()
-        .WithProperty("DebugSymbols", "True")
-        .WithProperty("DebugType", "Embedded")
         .WithProperty("Version", versionInfo.SemVer)
         .WithProperty("PackageVersion", versionInfo.SemVer)
         .WithProperty("InformationalVersion", versionInfo.InformationalVersion)
-        .WithProperty("NoPackageAnalysis", "True");
-
+        .WithProperty("NoPackageAnalysis", "True")
+        .WithTarget("Build");
+	
     MSBuild(sln, settings);
 });
 
@@ -108,15 +137,21 @@ Task("UnitTest")
 
     var testPaths = GetFiles("./UnitTests/*.UnitTest/*.UnitTest.csproj");
     var testsFailed = false;
+
+    var settings = new DotNetCoreTestSettings
+    {
+        Configuration = configuration,
+        NoBuild = true
+    };
+
     foreach(var project in testPaths)
     {
         var projectName = project.GetFilenameWithoutExtension();
-        var testXml = new FilePath(outputDir + "/Tests/" + projectName + ".xml").MakeAbsolute(Context.Environment);
+        var testXml = MakeAbsolute(new FilePath(outputDir + "/Tests/" + projectName + ".xml"));
+        settings.Logger = $"xunit;LogFilePath={testXml.FullPath}";
         try 
         {
-            DotNetCoreTool(project,
-                "xunit",  "-fxversion 2.0.0 --no-build -parallel none -configuration " + 
-                configuration + " -xml \"" + testXml.FullPath + "\"");
+            DotNetCoreTest(project.ToString(), settings);
         }
         catch
         {
@@ -134,18 +169,101 @@ Task("UnitTest")
         throw new Exception("Tests failed :(");
 });
 
+Task("CopyPackages")
+    .IsDependentOn("Build")
+    .Does(() => 
+{
+    var nugetFiles = GetFiles(solutionName + "*/**/bin/" + configuration + "/**/*.nupkg");
+    CopyFiles(nugetFiles, outputDir);
+});
+
+Task("SignPackages")
+    .WithCriteria(() => !BuildSystem.IsLocalBuild)
+    .WithCriteria(() => IsRepository(repoName))
+    .WithCriteria(() => !string.IsNullOrEmpty(signingSecret))
+    .WithCriteria(() => !string.IsNullOrEmpty(signingUser))
+    .WithCriteria(() => isRunningOnAppVeyor)
+    .WithCriteria(() => !AppVeyor.Environment.PullRequest.IsPullRequest)
+    .IsDependentOn("Build")
+    .IsDependentOn("CopyPackages")
+    .Does(() => 
+{
+    var settings = File("./signclient.json");
+    var files = GetFiles(outputDir + "/*.nupkg");
+
+    foreach(var file in files)
+    {
+        Information("Signing {0}...", file.FullPath);
+
+        // Build the argument list.
+        var arguments = new ProcessArgumentBuilder()
+            .Append("sign")
+            .AppendSwitchQuoted("-c", MakeAbsolute(settings.Path).FullPath)
+            .AppendSwitchQuoted("-i", MakeAbsolute(file).FullPath)
+            .AppendSwitchQuotedSecret("-s", signingSecret)
+            .AppendSwitchQuotedSecret("-r", signingUser)
+            .AppendSwitchQuoted("-n", solutionName)
+            .AppendSwitchQuoted("-d", solutionName)
+            .AppendSwitchQuoted("-u", "https://baseflow.com");
+
+        // Sign the binary.
+        var result = StartProcess("SignClient.exe", new ProcessSettings { Arguments = arguments });
+        if (result != 0)
+        {
+            // We should not recover from this.
+            throw new InvalidOperationException("Signing failed!");
+        }
+    }
+
+    didSignPackages = true;
+});
+
 Task("PublishPackages")
     .WithCriteria(() => !BuildSystem.IsLocalBuild)
-    .WithCriteria(() => IsRepository("jdehlin/Xamarin-Sidebar"))
-    .WithCriteria(() => ShouldPushNugetPackages(versionInfo.BranchName))
+    .WithCriteria(() => IsRepository(repoName))
+    .WithCriteria(() => !string.IsNullOrEmpty(nugetSource))
+    .WithCriteria(() => !string.IsNullOrEmpty(nugetApiKey))
+    .WithCriteria(() => shouldPublishPackages)
+    .IsDependentOn("CopyPackages")
+    //.IsDependentOn("SignPackages")
     .Does (() =>
 {
-    // Resolve the API key.
-    var nugetKeySource = GetNugetKeyAndSource();
-    var apiKey = nugetKeySource.Item1;
-    var source = nugetKeySource.Item2;
+    //if (!didSignPackages)
+    //{
+    //    Warning("Packages were not signed. Not publishing packages");
+    //    return;
+    //}
 
-    var nugetFiles = GetFiles("Xamarin-Sidebar*/**/bin/" + configuration + "/**/*.nupkg");
+    var nugetPushSettings = new NuGetPushSettings
+    {
+        Source = nugetSource,
+        ApiKey = nugetApiKey
+    };
+
+    if (nugetSource.Contains("github.com"))
+    {
+        var nugetSourceSettings = new NuGetSourcesSettings
+        {
+            UserName = "Martijn00",
+            Password = githubToken,
+            IsSensitiveSource = true
+        };
+
+        var feed = new 
+        {
+            Name = "GitHub",
+            Source = nugetSource
+        };
+
+        NuGetAddSource(feed.Name, feed.Source, nugetSourceSettings);
+
+        nugetPushSettings = new NuGetPushSettings
+        {
+            Source = feed.Source
+        };
+    }
+
+    var nugetFiles = GetFiles(outputDir + "/*.nupkg");
 
     var policy = Policy
         .Handle<Exception>()
@@ -155,25 +273,21 @@ Task("PublishPackages")
     foreach(var nugetFile in nugetFiles)
     {
         policy.Execute(() =>
-            NuGetPush(nugetFile, new NuGetPushSettings {
-                Source = source,
-                ApiKey = apiKey
-            })
+            NuGetPush(nugetFile, nugetPushSettings)
         );
     }
 });
 
-Task("UploadAppVeyorArtifact")
+Task("UploadArtifacts")
+    .IsDependentOn("CopyPackages")
     .WithCriteria(() => isRunningOnAppVeyor)
     .Does(() => 
 {
-
-    Information("Artifacts Dir: {0}", outputDir.FullPath);
+	Information("Artifacts Dir: {0}", outputDir.FullPath);
 
     var uploadSettings = new AppVeyorUploadArtifactsSettings();
 
-    var artifacts = GetFiles("Xamarin-Sidebar*/**/bin/" + configuration + "/**/*.nupkg")
-        + GetFiles(outputDir.FullPath + "/**/*");
+    var artifacts = GetFiles(outputDir.FullPath + "/**/*");
 
     foreach(var file in artifacts) {
         Information("Uploading {0}", file.FullPath);
@@ -185,13 +299,69 @@ Task("UploadAppVeyorArtifact")
 
         AppVeyor.UploadArtifact(file.FullPath, uploadSettings);
     }
+	
+});
+
+Task("UpdateChangelog")
+    .Does(() => 
+{
+    var arguments = new ProcessArgumentBuilder();
+    if (!string.IsNullOrEmpty(githubToken))
+        arguments.Append("--token {0}", githubToken);
+    else if (!string.IsNullOrEmpty(githubTokenEnv))
+        arguments.Append("--token {0}", githubTokenEnv);
+
+    // Exclude labels
+    var excludeLabels = new [] {
+        "t/question",
+        "s/wont-fix",
+        "s/duplicate",
+        "s/deprecated",
+        "s/invalid"
+    };
+    arguments.Append("--exclude-labels {0}", string.Join(",", excludeLabels));
+
+    // bug labels
+    arguments.Append("--bug-labels {0}", "t/bug");
+
+    // enhancement labels
+    arguments.Append("--enhancement-labels {0}", "t/feature");
+
+    // breaking labels (enable when github_changelog_generator 1.15 is released)
+    //arguments.Append("--breaking-labels {0}", "t/breaking");
+
+    arguments.Append("--max-issues 200");
+
+    if (!string.IsNullOrEmpty(sinceTag) && versionInfo.BranchName.Contains("release/"))
+    {
+        arguments.Append("--between-tags {0},{1}", sinceTag, versionInfo.MajorMinorPatch);
+
+        arguments.Append("--future-release {0}", versionInfo.MajorMinorPatch);
+    }
+    else 
+    {
+        if (!string.IsNullOrEmpty(sinceTag))
+            arguments.Append("--since-tag {0}", sinceTag);
+
+        if (versionInfo.BranchName.Contains("release/"))
+            arguments.Append("--future-release {0}", versionInfo.MajorMinorPatch);
+    }
+
+    Information("Starting github_changelog_generator with arguments: {0}", arguments.Render());
+
+    using(var process = StartAndReturnProcess("github_changelog_generator",
+        new ProcessSettings { Arguments = arguments }))
+    {
+        process.WaitForExit();
+        Information("Exit code: {0}", process.GetExitCode());
+    }
 });
 
 Task("Default")
     .IsDependentOn("Build")
     .IsDependentOn("UnitTest")
+    .IsDependentOn("UploadArtifacts")
     .IsDependentOn("PublishPackages")
-    .IsDependentOn("UploadAppVeyorArtifact")
     .Does(() => 
 {
 });
@@ -205,18 +375,24 @@ MSBuildSettings GetDefaultBuildSettings()
         Configuration = configuration,
         ToolPath = msBuildPath,
         Verbosity = verbosity,
-        ArgumentCustomization = args => args.Append("/m")
+        ArgumentCustomization = args => args.Append("/m"),
+        ToolVersion = MSBuildToolVersion.VS2019
     };
 
     return settings;
 }
 
-bool ShouldPushNugetPackages(string branchName)
+bool ShouldPushNugetPackages(string branchName, string nugetSource)
 {
     if (StringComparer.OrdinalIgnoreCase.Equals(branchName, "develop"))
         return true;
 
-    return IsMasterOrReleases(branchName) && IsTagged().Item1;
+    var masterOrRelease = IsMasterOrReleases(branchName);
+
+    if (masterOrRelease && nugetSource != null && nugetSource.Contains("github.com"))
+        return true;
+
+    return masterOrRelease && IsTagged().Item1;
 }
 
 bool IsMasterOrReleases(string branchName)
@@ -278,38 +454,4 @@ Tuple<bool, string> IsTagged()
         Debug("HEAD is tagged: {0}", tag.FriendlyName);
         return Tuple.Create<bool, string>(true, tag.FriendlyName);
     }
-}
-
-Tuple<string, string> GetNugetKeyAndSource()
-{
-    var apiKeyKey = string.Empty;
-    var sourceKey = string.Empty;
-    if (isRunningOnAppVeyor)
-    {
-        apiKeyKey = "NUGET_APIKEY";
-        sourceKey = "NUGET_SOURCE";
-    }
-    else
-    {
-        if (StringComparer.OrdinalIgnoreCase.Equals(versionInfo.BranchName, "develop"))
-        {
-            apiKeyKey = "NUGET_APIKEY_DEVELOP";
-            sourceKey = "NUGET_SOURCE_DEVELOP";
-        }
-        else if (IsMasterOrReleases(versionInfo.BranchName))
-        {
-            apiKeyKey = "NUGET_APIKEY_MASTER";
-            sourceKey = "NUGET_SOURCE_MASTER";
-        }
-    }
-
-    var apiKey = EnvironmentVariable(apiKeyKey);
-    if (string.IsNullOrEmpty(apiKey))
-        throw new Exception(string.Format("The {0} environment variable is not defined.", apiKeyKey));
-
-    var source = EnvironmentVariable(sourceKey);
-    if (string.IsNullOrEmpty(source))
-        throw new Exception(string.Format("The {0} environment variable is not defined.", sourceKey));
-
-    return Tuple.Create(apiKey, source);
 }

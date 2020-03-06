@@ -24,6 +24,7 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+.vscode/
 
 # Visual Studo 2015 cache/options directory
 .vs/
@@ -253,6 +254,10 @@ tools/*
 !tools/packages.config
 artifacts/
 *.nupkg
+*.binlog
 
 #linting
 .sonarqube/
+
+# dotnet tools
+.store/
