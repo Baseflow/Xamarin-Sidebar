@@ -1,10 +1,12 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>xamarin.ios10</TargetFrameworks>
+    <TargetFrameworks>net6.0-ios</TargetFrameworks>
     <AssemblyName>SidebarNavigation</AssemblyName>
     <RootNamespace>SidebarNavigation</RootNamespace>
     <Description>Sidebar navigation for Xamarin.iOS</Description>
     <PackageId>SidebarNavigation</PackageId>
+
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <ItemGroup>

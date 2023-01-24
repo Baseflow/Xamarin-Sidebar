@@ -12,8 +12,5 @@
 
     <Platform>AnyCPU</Platform>
     <DebugType>full</DebugType>
-  
-    <IsLibraryProject>$(MSBuildProjectName.Contains('MediaManager'))</IsLibraryProject>
-    <IsXamarinForms>$(MSBuildProjectName.Contains('.Forms'))</IsXamarinForms>
   </PropertyGroup>
 </Project>
